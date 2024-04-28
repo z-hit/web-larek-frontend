@@ -52,6 +52,7 @@ yarn build
 ## Архитектура
 
 Ссылка на UML схему с Архитектурой проекта:
+https://github.com/z-hit/web-larek-frontend/blob/0fd4a15151fa457292c99c6b88a8fd888ee3920a/UML%20Web%20Larek.jpg
 
 ## Базовый код
 
