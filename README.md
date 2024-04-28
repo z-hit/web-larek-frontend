@@ -153,6 +153,7 @@ https://github.com/z-hit/web-larek-frontend/blob/0fd4a15151fa457292c99c6b88a8fd8
 
 ## Основные типы данных
 
+```
 type ItemID = string;
 type Payment = "Онлайн" | "При получении";
 type Category = "другое" | "софт-скилл" | "дополнительное" | "кнопка" | "хард-скилл";
@@ -171,3 +172,4 @@ type InputPayment = {
 buttonPayOnline: Button;
 buttonPayOffline: Button;
 }
+```
