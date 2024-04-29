@@ -1,3 +1,14 @@
+// MODEL
+
+export interface IAppState {
+	catalog: Item[];
+	basket: ItemID[];
+	user: IUser | null;
+	loading: boolean;
+	formErrors: FormErrors = {};
+	modal: string | null;
+}
+
 export interface Item {
 	id: ItemID;
 	title: string;
@@ -5,40 +16,21 @@ export interface Item {
 	description: string;
 	image: string;
 	category: Category;
-	counter: number;
-	isAdded: Boolean;
-	button: Button;
+	counter: number | null;
+	isAdded: boolean | null;
+	button: Button | null;
 }
 
-export interface User {
+export interface IUser {
 	payment: Payment;
 	email: string;
 	phone: string;
 	address: string;
 	total: number;
 	items: ItemID[];
-	addPayment(payment: Payment): void;
-	addAddress(address: string): void;
-	addEmail(email: string): void;
-	addPhone(phone: string): void;
-	addItems(items: ItemID[]): void;
-	postUserData(
-		userData: Pick<
-			User,
-			'payment' | 'email' | 'phone' | 'address' | 'total' | 'items'
-		>
-	): void;
 }
 
-export interface Basket {
-	items: ItemID[];
-	total: number;
-	addItem(itemId: ItemID): void;
-	removeItem(itemId: ItemID): void;
-	clearAll(): void;
-	getItems(): ItemID[];
-}
-
+export type FormErrors = Partial<Record<keyof IUser, string>>;
 export type ItemID = string;
 export type Payment = 'Онлайн' | 'При получении';
 export type Category =
@@ -54,14 +46,14 @@ export type Picture = {
 };
 export type Button = {
 	title?: string;
-	event: Event;
-	callback: Function;
-	disabled?: Boolean;
+	event: string typeof Event;
+	callback: string;
+	disabled?: boolean;
 };
-export type InputPayment = {
+/* export type InputPayment = {
 	buttonPayOnline: Button;
 	buttonPayOffline: Button;
-};
+}; */
 
 //MAIN PAGE
 
