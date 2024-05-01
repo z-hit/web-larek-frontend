@@ -246,25 +246,119 @@ set items(items: HTMLElement[]) - принимает массив элемент
 set selected(items: string[]) - принимает массив карточек, меняет статус кнопки между актиной и нет в зависимости от того, есть ли в корзине товары или нет;
 set total(total: number) - принимает число сумму стоимости всех товаров, устанавливает сумму в соответствующий элемент.
 
+8. Tabs
+   Класс Tabs наследует Component и реализует функционал выбора опции путем переключения между кнопками. Класс имеет поле:
+   \_buttons: HTMLButtonElement[] - коллекция кнопок, между которыми будет проходит переключение.
+
+Конструктор класса constructor(container: HTMLElement, actions?: TabActions) принимает контейнер и список действий для кнопок, создает кнопки и навешивает на каждую слушатель событий.
+
+Имеет методы:
+set selected(name: string) - принимает навзание кнопки и устанавливает ее выбранной, также делая ее неактивной для выбора (т к она уже выбрана).
+
 ## Основные типы данных
 
-```
-type ItemID = string;
-type Payment = "Онлайн" | "При получении";
-type Category = "другое" | "софт-скилл" | "дополнительное" | "кнопка" | "хард-скилл";
-type Picture = {
-url: string;
-title?: string;
-alt: string;
+export interface IAppState {
+catalog: Item[];
+basket: ItemID[];
+order: IOrder | null;
+loading: boolean;
+formErrors: FormErrors = {};
+modal: string | null;
 }
-type Button = {
-title?: string;
-event: Event;
-callback: Function;
-disabled?: Boolean;
+
+export interface Item {
+id: ItemID;
+title: string;
+price: number;
+description: string;
+image: string;
+category: Category;
+isAdded: boolean;
+}
+
+export interface IOrderForm {
+payment: string;
+address: string;
+}
+
+export interface IContactsForm {
+email: string;
+phone: string;
+}
+
+export interface IOrder extends IOrderForm, IContactsForm {
+total: number;
+items: ItemID[];
+}
+
+export type FormErrors = Partial<Record<keyof IOrder, string>>;
+export type ItemID = string;
+export type Payment = 'Онлайн' | 'При получении';
+export type Category =
+| 'другое'
+| 'софт-скилл'
+| 'дополнительное'
+| 'кнопка'
+| 'хард-скилл';
+
+interface IPage {
+catalog: HTMLElement[];
+locked: boolean;
+}
+
+export interface IItemCard {
+id: ItemID;
+title: string;
+price: number;
+description?: string;
+image?: string;
+category?: Category;
+index?: number;
+isAdded: boolean;
+}
+
+export type TabState = {
+selected: string;
+}
+export type TabActions = {
+onClick: (tab: string) => void;
+}
+
+interface ISuccess {
+total: number;
+}
+
+interface ISuccessActions {
+onClick: () => void;
+}
+
+interface IModalData {
+content: HTMLElement;
+}
+
+interface IFormState {
+valid: boolean;
+errors: string[];
+}
+
+interface IBasketView {
+items: HTMLElement[];
+total: number;
+selected: string[];
+}
+
+type EventName = string | RegExp;
+type Subscriber = Function;
+type EmitterEvent = {
+eventName: string;
+data: unknown;
 };
-type InputPayment = {
-buttonPayOnline: Button;
-buttonPayOffline: Button;
+
+export interface IEvents {
+on<T extends object>(event: EventName, callback: (data: T) => void): void;
+emit<T extends object>(event: string, data?: T): void;
+trigger<T extends object>(
+event: string,
+context?: Partial<T>
+): (data: T) => void;
 }
-```
