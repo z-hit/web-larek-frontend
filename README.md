@@ -63,7 +63,7 @@ yarn build
 
 ## URL схема с архитектурой проекта
 
-[Ссылка на **UML** схему с Архитектурой проекта:]()
+[Ссылка на **UML** схему с Архитектурой проекта:](https://github.com/z-hit/web-larek-frontend/blob/main/UML%20Web%20Larek%20MVC.jpg)
 
 ## Базовый код - API и Котроллер Событий (Controller)
 
