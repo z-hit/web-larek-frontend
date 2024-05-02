@@ -17,7 +17,7 @@
 - src/pages/index.html — HTML-файл главной страницы
 - src/types/index.ts — файл с типами
 - src/index.ts — точка входа приложения
-- src/styles/styles.scss — корневой файл стилей
+- src/scss/styles.scss — корневой файл стилей
 - src/utils/constants.ts — файл с константами
 - src/utils/utils.ts — файл с утилитами
 
@@ -55,18 +55,17 @@ yarn build
 
 В части Model представлен абстрактный класс Model и реализующий его AppState, отвещающий за хранение ключевых данных o всех товарах и о заказе, необходимые для взаимодействия с сервером и осуществеления бизнес логики.
 
-В части View представлен абстрактный класс Component, который реализуется в нескольких классах ++++++++++
+В части View представлен абстрактный класс Component, который реализуется в нескольких классах - Page, Modal, ItemCard, Form, Basket, Tabs, Success. Классы осуществляют создание визуального образа приложения в виде различных компонентов.
 
-В части Controller представлен класс EventEmitter, который отслеживает изменения состояния приложения и оповещает о них необходимые компоненты приложения, которые также меняются в ответ на произошедшие изменения.
+В части Controller представлен класс EventEmitter, который отслеживает изменения состояния приложения (события) и оповещает о них необходимые компоненты приложения, которые меняются в соответствии с произошедшим событием. Взаимодействие происходит по принципу promise-based flow.
+
+Класс Api осуществляет взаимодействие приложения с сервером путем передачи приложению изначальных данных о товарах для каталога, а также путем приема данных о заказе, введенных пользователем.
 
 ## URL схема с архитектурой проекта
 
 Ссылка на UML схему с Архитектурой проекта:
-https://github.com/z-hit/web-larek-frontend/blob/0fd4a15151fa457292c99c6b88a8fd888ee3920a/UML%20Web%20Larek.jpg
 
-## Базовый код
-
-## API и Котроллер Событий (Controller)
+## Базовый код - API и Котроллер Событий (Controller)
 
 2. Класс Api реализует взаимодействие с Сервером и имеет следующие поля:
    readonly baseUrl: string - поле с базовым адресом сервера;
@@ -105,7 +104,7 @@ https://github.com/z-hit/web-larek-frontend/blob/0fd4a15151fa457292c99c6b88a8fd8
    formErrors: FormErrors = {} - список ошибок, возникших при работе с сервером;
    preview: string | null - статус попапа.
 
-Мутоды AppState:
+Методы класса:
 setCatalog(items: IItem[]): void - получает список изначальных карточек от сервера и сохраняет их в каталог в виде реализации интерфейса IItem;
 toggleBasketItem(id: ItemID, isAdded: boolean): void - получает id товара и статус его добавленности в корзину, позволяет добавлять или удалять товар из корзины, в зависимости от статуса;
 clearBasket(): void - очищает корзину от всех товаров;
@@ -257,7 +256,11 @@ set selected(name: string) - принимает навзание кнопки и
 
 ## Основные типы данных
 
-export interface IAppState {
+type CatalogChangeEvent = {
+catalog: Item[]
+}
+
+interface IAppState {
 catalog: Item[];
 basket: ItemID[];
 order: IOrder | null;
@@ -266,7 +269,7 @@ formErrors: FormErrors = {};
 modal: string | null;
 }
 
-export interface Item {
+interface Item {
 id: ItemID;
 title: string;
 price: number;
@@ -276,25 +279,25 @@ category: Category;
 isAdded: boolean;
 }
 
-export interface IOrderForm {
+interface IOrderForm {
 payment: string;
 address: string;
 }
 
-export interface IContactsForm {
+interface IContactsForm {
 email: string;
 phone: string;
 }
 
-export interface IOrder extends IOrderForm, IContactsForm {
+interface IOrder extends IOrderForm, IContactsForm {
 total: number;
 items: ItemID[];
 }
 
-export type FormErrors = Partial<Record<keyof IOrder, string>>;
-export type ItemID = string;
-export type Payment = 'Онлайн' | 'При получении';
-export type Category =
+type FormErrors = Partial<Record<keyof IOrder, string>>;
+type ItemID = string;
+type Payment = 'Онлайн' | 'При получении';
+type Category =
 | 'другое'
 | 'софт-скилл'
 | 'дополнительное'
@@ -306,7 +309,7 @@ catalog: HTMLElement[];
 locked: boolean;
 }
 
-export interface IItemCard {
+interface IItemCard {
 id: ItemID;
 title: string;
 price: number;
@@ -317,10 +320,10 @@ index?: number;
 isAdded: boolean;
 }
 
-export type TabState = {
+type TabState = {
 selected: string;
 }
-export type TabActions = {
+type TabActions = {
 onClick: (tab: string) => void;
 }
 
@@ -354,7 +357,7 @@ eventName: string;
 data: unknown;
 };
 
-export interface IEvents {
+interface IEvents {
 on<T extends object>(event: EventName, callback: (data: T) => void): void;
 emit<T extends object>(event: string, data?: T): void;
 trigger<T extends object>(
@@ -362,3 +365,20 @@ event: string,
 context?: Partial<T>
 ): (data: T) => void;
 }
+
+## Основные события
+
+items:changed - изменение списка товаров (в каталоге)
+modal:open - открытие модального окна
+modal:close - закрытие модального окна
+order:open - открытие формы заполнения данных о заказе
+contacts:open - открытие формы заполнения данных о контактах
+order:submit - отправка данных о заказе (по нажатию книпки)
+contacts:submit - отправка контактных данных (по нажатию кнопки)
+formErrors:change - изменение состояния ошибок заполнения формы
+/^order\.._:change/ - изменения состояния формы заказа (при заполнении)
+/^contacts\.._:change/ - изменения состояния формы контактов (при заполнении)
+basket:open - открытие корзины
+basket:changed - изменение состояния корзины (списка добавленнызх товаров, суммы)
+card:select - нажатие на карточку, открывающее модальное окно с карточкой
+preview:changed - изменение модального окна с карточкой
