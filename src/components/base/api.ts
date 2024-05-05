@@ -8,6 +8,7 @@ export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
 export class Api {
 	readonly baseUrl: string;
 	protected options: RequestInit;
+	
 
 	constructor(baseUrl: string, options: RequestInit = {}) {
 		this.baseUrl = baseUrl;

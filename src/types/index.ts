@@ -1,8 +1,5 @@
-import { IContactsForm } from '../components/Contacts';
-import { IOrderForm } from '../components/Order';
-
 export interface IAppState {
-	catalog: Item[];
+	catalog: IItem[];
 	basket: ItemID[];
 	order: IOrder | null;
 	loading: boolean;
@@ -10,7 +7,7 @@ export interface IAppState {
 	modal: string | null;
 }
 
-export interface Item {
+export interface IItem {
 	id: ItemID;
 	title: string;
 	price: number;
@@ -23,16 +20,16 @@ export interface Item {
 export interface IOrderForm {
 	payment: string;
 	address: string;
-}
-
-export interface IContactsForm {
 	email: string;
 	phone: string;
 }
 
-export interface IOrder extends IOrderForm, IContactsForm {
-	total: number;
+export interface IOrder extends IOrderForm {
 	items: ItemID[];
+}
+
+export interface IOrderResult {
+	id: ItemID;
 }
 
 export type FormErrors = Partial<Record<keyof IOrder, string>>;
@@ -44,3 +41,8 @@ export type Category =
 	| 'дополнительное'
 	| 'кнопка'
 	| 'хард-скилл';
+
+export type Button = {
+	title: string;
+	callback: Function;
+};
