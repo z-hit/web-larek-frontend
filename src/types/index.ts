@@ -3,7 +3,7 @@ export interface IAppState {
 	basket: ItemID[];
 	order: IOrder | null;
 	loading: boolean;
-	formErrors: FormErrors = {};
+	formErrors: FormErrors;
 	modal: string | null;
 }
 
@@ -14,7 +14,6 @@ export interface IItem {
 	description: string;
 	image: string;
 	category: Category;
-	isAdded: boolean;
 }
 
 export interface IOrderForm {
@@ -29,7 +28,8 @@ export interface IOrder extends IOrderForm {
 }
 
 export interface IOrderResult {
-	id: ItemID;
+	id: string;
+	total: number;
 }
 
 export type FormErrors = Partial<Record<keyof IOrder, string>>;

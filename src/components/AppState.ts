@@ -7,7 +7,6 @@ import {
 	IItem,
 	IOrder,
 	IOrderForm,
-	IContactsForm,
 	ItemID,
 	Category,
 	Button,
@@ -43,17 +42,13 @@ export class AppState extends Model<IAppState> {
 	preview: string | null;
 	formErrors: FormErrors = {};
 
-	toggleBasketItem(id: string, isAdded: boolean) {
-		if (isAdded) {
-			this.order.items = _.uniq([...this.order.items, id]);
-		} else {
-			this.order.items = _.without(this.order.items, id);
-		}
+	removeBasketItem(id: string) {
+		this.order.items.filter((item: ItemID) => item !== id);
 	}
 
 	clearBasket() {
 		this.order.items.forEach((id) => {
-			this.toggleBasketItem(id, false);
+			this.removeBasketItem(id);
 		});
 	}
 
@@ -84,11 +79,8 @@ export class AppState extends Model<IAppState> {
 
 	validateOrder() {
 		const errors: typeof this.formErrors = {};
-		if (!this.order.email) {
-			errors.email = 'Необходимо указать email';
-		}
-		if (!this.order.phone) {
-			errors.phone = 'Необходимо указать телефон';
+		if (!this.order.address) {
+			errors.address = 'Необходимо указать адрес';
 		}
 		this.formErrors = errors;
 		this.events.emit('formErrors:change', this.formErrors);

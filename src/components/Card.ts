@@ -19,12 +19,12 @@ export interface IItemCard {
 
 export class ItemCard extends Component<IItemCard> {
 	protected _title: HTMLElement;
+	protected _price: HTMLElement;
+
 	protected _image?: HTMLImageElement;
 	protected _description?: HTMLElement;
 	protected _button?: HTMLButtonElement;
-
 	protected _category?: HTMLElement;
-	protected _price?: HTMLElement;
 	protected _index?: HTMLElement;
 
 	constructor(
@@ -35,15 +35,13 @@ export class ItemCard extends Component<IItemCard> {
 		super(container);
 
 		this._title = ensureElement<HTMLElement>(`.${blockName}__title`, container);
-		this._image = ensureElement<HTMLImageElement>(
-			`.${blockName}__image`,
-			container
-		);
+		this._price = ensureElement<HTMLElement>(`.${blockName}__price`, container);
+
+		this._image = container.querySelector(`.${blockName}__image`);
 		this._button = container.querySelector(`.${blockName}__button`);
 		this._description = container.querySelector(`.${blockName}__description`);
-		this._price = ensureElement<HTMLElement>(`.${blockName}_price`, container);
 		this._category = container.querySelector(`.${blockName}_category`);
-		this._index = container.querySelector(`.${blockName}_index`);
+		this._index = container.querySelector(`.${blockName}_item-index`);
 
 		if (actions?.onClick) {
 			if (this._button) {
@@ -66,12 +64,20 @@ export class ItemCard extends Component<IItemCard> {
 		this.setText(this._title, value);
 	}
 
-	get title(): string {
-		return this._title.textContent || '';
+	set price(value: string) {
+		this.setText(this._price, value + ' синапсов');
 	}
 
 	set image(value: string) {
 		this.setImage(this._image, value, this.title);
+	}
+
+	set category(value: string) {
+		this.setText(this._category, value);
+	}
+
+	set index(value: string) {
+		this.setText(this._index, value);
 	}
 
 	set description(value: string | string[]) {
@@ -88,30 +94,3 @@ export class ItemCard extends Component<IItemCard> {
 		}
 	}
 }
-
-export class ItemCardCatalog extends ItemCard {
-	constructor(container: HTMLElement, actions?: ICardActions) {
-		super('card', container, actions);
-	}
-}
-/* 
-export type AuctionStatus = {
-	status: string;
-	time: string;
-	label: string;
-	nextBid: number;
-	history: number[];
-};
-
-export class AuctionItem extends Card<HTMLElement> {
-	protected _status: HTMLElement;
-
-	constructor(container: HTMLElement, actions?: ICardActions) {
-		super('lot', container, actions);
-		this._status = ensureElement<HTMLElement>(`.lot__status`, container);
-	}
-
-	set status(content: HTMLElement) {
-		this._status.replaceWith(content);
-	}
-} */

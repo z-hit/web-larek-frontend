@@ -5,13 +5,14 @@ import { API_URL, CDN_URL } from './utils/constants';
 import { EventEmitter } from './components/base/events';
 import { AppState, CatalogChangeEvent } from './components/AppState';
 import { Page } from './components/Page';
-import { ItemCardCatalog } from './components/Card';
+import { ItemCard } from './components/Card';
 import { cloneTemplate, createElement, ensureElement } from './utils/utils';
 import { Modal } from './components/common/Modal';
 import { Basket } from './components/common/Basket';
 import { Tabs } from './components/common/Tabs';
 import { IItem, IOrderForm } from './types';
 import { Order } from './components/Order';
+import { Contacts } from './components/Contacts';
 import { Success } from './components/common/Success';
 
 const events = new EventEmitter();
@@ -41,17 +42,18 @@ const tabs = new Tabs(cloneTemplate(tabsTemplate), {
 	},
 });
 const order = new Order(cloneTemplate(orderTemplate), events);
-//const contacts = new Contacts(cloneTemplate(contactsTemplate), events);
+const contacts = new Contacts(cloneTemplate(contactsTemplate), events);
 
 events.on<CatalogChangeEvent>('items:changed', () => {
 	page.catalog = appData.catalog.map((item) => {
-		const card = new ItemCardCatalog(cloneTemplate(cardCatalogTemplate), {
+		const card = new ItemCard('card', cloneTemplate(cardCatalogTemplate), {
 			onClick: () => events.emit('card:select', item),
 		});
 		return card.render({
+			category: item.category,
 			title: item.title,
 			image: item.image,
-			description: item.description,
+			price: item.price,
 		});
 	});
 });
@@ -65,7 +67,6 @@ events.on('order:submit', () => {
 				onClick: () => {
 					modal.close();
 					appData.clearBasket();
-					events.emit('auction:changed');
 				},
 			});
 
@@ -95,86 +96,36 @@ events.on(
 	}
 );
 
-// Открыть форму заказа
 events.on('order:open', () => {
 	modal.render({
 		content: order.render({
-			phone: '',
-			email: '',
+			payment: '',
+			address: '',
 			valid: false,
 			errors: [],
 		}),
 	});
 });
 
-// Открыть закрытые лоты
-events.on('basket:open', () => {
+events.on('contacts:open', () => {
 	modal.render({
-		content: createElement<HTMLElement>('div', {}, [
-			tabs.render({
-				selected: 'closed',
-			}),
-			basket.render(),
-		]),
+		content: contacts.render({
+			email: '',
+			phone: '',
+			valid: false,
+			errors: [],
+		}),
 	});
 });
 
-// Открыть лот
-events.on('card:select', (item: IItem) => {
-	appData.setPreview(item);
+events.on('basket:open', () => {
+	modal.render({
+		content: createElement<HTMLElement>('div', {}, [basket.render()]),
+	});
 });
 
-// Изменен открытый выбранный лот
-events.on('preview:changed', (item: IItem) => {
-	const showItem = (item: IItem) => {
-		const card = new AuctionItem(cloneTemplate(cardPreviewTemplate));
-		const auction = new Auction(cloneTemplate(auctionTemplate), {
-			onSubmit: (price: number) => {
-				item.placeBid(price);
-				auction.render({
-					status: item.status,
-					time: item.timeStatus,
-					label: item.auctionStatus,
-					nextBid: item.nextBid,
-					history: item.history,
-				});
-			},
-		});
-
-		modal.render({
-			content: card.render({
-				title: item.title,
-				image: item.image,
-				description: item.description.split('\n'),
-				status: auction.render({
-					status: item.status,
-					time: item.timeStatus,
-					label: item.auctionStatus,
-					nextBid: item.nextBid,
-					history: item.history,
-				}),
-			}),
-		});
-
-		if (item.status === 'active') {
-			auction.focus();
-		}
-	};
-
-	if (item) {
-		api
-			.getLotItem(item.id)
-			.then((result) => {
-				item.description = result.description;
-				item.history = result.history;
-				showItem(item);
-			})
-			.catch((err) => {
-				console.error(err);
-			});
-	} else {
-		modal.close();
-	}
+events.on('card:select', (item: IItem) => {
+	appData.setPreview(item);
 });
 
 events.on('modal:open', () => {
