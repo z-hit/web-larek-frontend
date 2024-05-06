@@ -66,3 +66,20 @@ export class EventEmitter implements IEvents {
 		};
 	}
 }
+
+export enum Events {
+	CHANGE_ITEMS = 'items:changed',
+	SUBMIT_ORDER = 'order:submit',
+	SUBMIT_CONTACTS = 'contacts:submit',
+	CHANGE_ERRORS = 'formErrors:change',
+	CHANGE_ORDER = '/^order..*:change/',
+	OPEN_ORDER = 'order:open',
+	OPEN_CONTACTS = 'contacts:open',
+	OPEN_BASKET = 'basket:open',
+	OPEN_CARD = 'card:select',
+	OPEN_MODAL = 'modal:open',
+	CLOSE_MODAL = 'modal:close',
+	CHANGE_PAYMENT = 'payment:changed',
+	CHANGE_PREVIEW = 'preview:changed',
+	ORDER_READY = 'order:ready',
+}
