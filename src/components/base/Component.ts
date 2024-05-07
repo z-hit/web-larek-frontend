@@ -7,6 +7,10 @@ export abstract class Component<T> {
 		element.classList.toggle(className, force);
 	}
 
+	addClass(element: HTMLElement, className: string) {
+		element.classList.add(className);
+	}
+
 	protected setText(element: HTMLElement, value: unknown) {
 		if (element) {
 			element.textContent = String(value);

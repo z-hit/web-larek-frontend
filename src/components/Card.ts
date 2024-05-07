@@ -17,6 +17,14 @@ export interface IItemCard {
 	isAdded: boolean;
 }
 
+const colorsCategory: Record<string, string> = {
+	другое: 'card__category_other',
+	'софт-скил': 'card__category_soft',
+	дополнительное: 'card__category_additional',
+	кнопка: 'card__category_button',
+	'хард-скил': 'card__category_hard',
+};
+
 export class ItemCard extends Component<IItemCard> {
 	protected _title: HTMLElement;
 	protected _price: HTMLElement;
@@ -40,7 +48,12 @@ export class ItemCard extends Component<IItemCard> {
 		this._image = container.querySelector(`.${blockName}__image`);
 		this._button = container.querySelector(`.${blockName}__button`);
 		this._description = container.querySelector(`.${blockName}__description`);
-		this._category = container.querySelector(`.${blockName}_category`);
+		//this._category = container.querySelector(`.${blockName}_category`);
+		this._category = ensureElement<HTMLElement>(
+			`.${blockName}__category`,
+			container
+		);
+
 		this._index = container.querySelector(`.${blockName}_item-index`);
 
 		if (actions?.onClick) {
@@ -74,6 +87,8 @@ export class ItemCard extends Component<IItemCard> {
 
 	set category(value: string) {
 		this.setText(this._category, value);
+		this.addClass(this._category, colorsCategory[value]);
+		console.log(value);
 	}
 
 	set index(value: string) {

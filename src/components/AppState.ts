@@ -23,7 +23,7 @@ export class Item extends Model<IItem> {
 	description: string;
 	image: string;
 	category: Category;
-	counter?: number;
+	index?: number;
 	isAdded?: boolean;
 	button?: Button;
 }
