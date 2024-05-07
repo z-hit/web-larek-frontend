@@ -9,7 +9,6 @@ import { ItemCard } from './components/Card';
 import { cloneTemplate, createElement, ensureElement } from './utils/utils';
 import { Modal } from './components/common/Modal';
 import { Basket } from './components/common/Basket';
-import { Tabs } from './components/common/Tabs';
 import { IItem, IOrderForm } from './types';
 import { Order } from './components/Order';
 import { Contacts } from './components/Contacts';
@@ -26,7 +25,6 @@ const cardCatalogTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
 const cardPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview');
 const cardBasketTemplate = ensureElement<HTMLTemplateElement>('#card-basket');
 const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
-const tabsTemplate = ensureElement<HTMLTemplateElement>('#tabs');
 const orderTemplate = ensureElement<HTMLTemplateElement>('#order');
 const contactsTemplate = ensureElement<HTMLTemplateElement>('#contacts');
 const successTemplate = ensureElement<HTMLTemplateElement>('#success');
@@ -36,11 +34,6 @@ const appData = new AppState({}, events);
 const page = new Page(document.body, events);
 const modal = new Modal(ensureElement<HTMLElement>('#modal-container'), events);
 const basket = new Basket(cloneTemplate(basketTemplate), events);
-const tabs = new Tabs(cloneTemplate(tabsTemplate), {
-	onClick: () => {
-		events.emit('payment:changed');
-	},
-});
 const order = new Order(cloneTemplate(orderTemplate), events);
 const contacts = new Contacts(cloneTemplate(contactsTemplate), events);
 
@@ -56,6 +49,26 @@ events.on<CatalogChangeEvent>('items:changed', () => {
 			price: item.price,
 		});
 	});
+});
+
+events.on('card:select', (item: IItem) => {
+	const card = new ItemCard('card', cloneTemplate(cardPreviewTemplate), {
+		onClick: () => events.emit('basket:open', item),
+	});
+
+	modal.render({
+		content: card.render({
+			category: item.category,
+			title: item.title,
+			image: item.image,
+			price: item.price,
+			description: item.description,
+		}),
+	});
+});
+
+events.on('modal:open', () => {
+	page.locked = true;
 });
 
 // Отправлена форма заказа
@@ -122,14 +135,6 @@ events.on('basket:open', () => {
 	modal.render({
 		content: createElement<HTMLElement>('div', {}, [basket.render()]),
 	});
-});
-
-events.on('card:select', (item: IItem) => {
-	appData.setPreview(item);
-});
-
-events.on('modal:open', () => {
-	page.locked = true;
 });
 
 events.on('modal:close', () => {
