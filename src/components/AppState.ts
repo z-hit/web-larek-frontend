@@ -44,7 +44,7 @@ export class AppState extends Model<IAppState> {
 	addBasketItem(item: IItem) {
 		this.order.items.push(item.id);
 		this.basket.push(item);
-		console.log(this.basket);
+		console.log('works');
 	}
 
 	removeBasketItem(id: string) {

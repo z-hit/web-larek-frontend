@@ -54,10 +54,10 @@ events.on<CatalogChangeEvent>('items:changed', () => {
 events.on('basket:open', () => {
 	const basketItems = appData.basket.map((item) => {
 		const card = new ItemCard('card', cloneTemplate(cardBasketTemplate), {
-			onClick: () => events.emit('basket:remove', item),
+			onClick: () => events.emit('card:select', item),
 		});
 		return card.render({
-			index: appData.basket.length,
+			index: appData.order.items.length,
 			title: item.title,
 			price: item.price,
 		});
@@ -66,6 +66,7 @@ events.on('basket:open', () => {
 	modal.render({
 		content: basket.render({
 			items: basketItems,
+			selected: appData.order.items,
 		}),
 	});
 });
