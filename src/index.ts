@@ -5,7 +5,7 @@ import { API_URL, CDN_URL } from './utils/constants';
 import { EventEmitter } from './components/base/events';
 import { AppState, CatalogChangeEvent } from './components/AppState';
 import { Page } from './components/Page';
-import { ItemCard } from './components/Card';
+import { IItemCard, ItemCard } from './components/Card';
 import { cloneTemplate, createElement, ensureElement } from './utils/utils';
 import { Modal } from './components/common/Modal';
 import { Basket } from './components/common/Basket';
@@ -51,9 +51,32 @@ events.on<CatalogChangeEvent>('items:changed', () => {
 	});
 });
 
+events.on('basket:open', () => {
+	const basketItems = appData.basket.map((item) => {
+		const card = new ItemCard('card', cloneTemplate(cardBasketTemplate), {
+			onClick: () => events.emit('basket:remove', item),
+		});
+		return card.render({
+			index: appData.basket.length,
+			title: item.title,
+			price: item.price,
+		});
+	});
+
+	modal.render({
+		content: basket.render({
+			items: basketItems,
+		}),
+	});
+});
+
+events.on('basket:add', (item: IItem) => {
+	appData.addBasketItem(item);
+});
+
 events.on('card:select', (item: IItem) => {
 	const card = new ItemCard('card', cloneTemplate(cardPreviewTemplate), {
-		onClick: () => events.emit('basket:open', item),
+		onClick: () => events.emit('basket:add', item),
 	});
 
 	modal.render({
@@ -128,12 +151,6 @@ events.on('contacts:open', () => {
 			valid: false,
 			errors: [],
 		}),
-	});
-});
-
-events.on('basket:open', () => {
-	modal.render({
-		content: createElement<HTMLElement>('div', {}, [basket.render()]),
 	});
 });
 

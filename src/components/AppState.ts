@@ -29,7 +29,7 @@ export class Item extends Model<IItem> {
 }
 
 export class AppState extends Model<IAppState> {
-	basket: ItemID[];
+	basket: IItem[] = [];
 	catalog: Item[];
 	loading: boolean;
 	order: IOrder = {
@@ -39,8 +39,13 @@ export class AppState extends Model<IAppState> {
 		phone: '',
 		items: [],
 	};
-	preview: string | null;
 	formErrors: FormErrors = {};
+
+	addBasketItem(item: IItem) {
+		this.order.items.push(item.id);
+		this.basket.push(item);
+		console.log(this.basket);
+	}
 
 	removeBasketItem(id: string) {
 		this.order.items.filter((item: ItemID) => item !== id);
@@ -62,11 +67,6 @@ export class AppState extends Model<IAppState> {
 	setCatalog(items: IItem[]) {
 		this.catalog = items.map((item) => new Item(item, this.events));
 		this.emitChanges('items:changed', { catalog: this.catalog });
-	}
-
-	setPreview(item: IItem) {
-		this.preview = item.id;
-		this.emitChanges('preview:changed', item);
 	}
 
 	setOrderField(field: keyof IOrderForm, value: string) {

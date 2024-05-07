@@ -6,6 +6,7 @@ import {
 	formatNumber,
 } from '../../utils/utils';
 import { EventEmitter } from '../base/events';
+import { IItem, ItemID } from '../AppState';
 
 interface IBasketView {
 	items: HTMLElement[];
@@ -23,7 +24,10 @@ export class Basket extends Component<IBasketView> {
 
 		this._list = ensureElement<HTMLElement>('.basket__list', this.container);
 		this._total = this.container.querySelector('.basket__total');
-		this._button = this.container.querySelector('.basket__action');
+		this._button = ensureElement<HTMLButtonElement>(
+			'.basket__button',
+			this.container
+		);
 
 		if (this._button) {
 			this._button.addEventListener('click', () => {

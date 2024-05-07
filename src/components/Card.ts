@@ -45,15 +45,10 @@ export class ItemCard extends Component<IItemCard> {
 		this._title = ensureElement<HTMLElement>(`.${blockName}__title`, container);
 		this._price = ensureElement<HTMLElement>(`.${blockName}__price`, container);
 
+		this._category = container.querySelector(`.${blockName}__category`);
 		this._image = container.querySelector(`.${blockName}__image`);
 		this._button = container.querySelector(`.${blockName}__button`);
 		this._description = container.querySelector(`.${blockName}__description`);
-		//this._category = container.querySelector(`.${blockName}_category`);
-		this._category = ensureElement<HTMLElement>(
-			`.${blockName}__category`,
-			container
-		);
-
 		this._index = container.querySelector(`.${blockName}_item-index`);
 
 		if (actions?.onClick) {
@@ -88,7 +83,6 @@ export class ItemCard extends Component<IItemCard> {
 	set category(value: string) {
 		this.setText(this._category, value);
 		this.addClass(this._category, colorsCategory[value]);
-		console.log(value);
 	}
 
 	set index(value: string) {
