@@ -86,7 +86,7 @@ export class ItemCard extends Component<IItemCard> {
 	}
 
 	set index(value: string) {
-		this.setText(this._index, value);
+		this.setText(this._index, String(value));
 	}
 
 	set description(value: string | string[]) {

@@ -52,12 +52,13 @@ events.on<CatalogChangeEvent>('items:changed', () => {
 });
 
 events.on('basket:open', () => {
-	const basketItems = appData.basket.map((item) => {
+	const basketItems = appData.order.items.map((id) => {
+		const item = appData.catalog.find((item) => item.id === id);
 		const card = new ItemCard('card', cloneTemplate(cardBasketTemplate), {
 			onClick: () => events.emit('card:select', item),
 		});
 		return card.render({
-			index: appData.order.items.length,
+			index: appData.getOrderLength(),
 			title: item.title,
 			price: item.price,
 		});
@@ -73,6 +74,7 @@ events.on('basket:open', () => {
 
 events.on('basket:add', (item: IItem) => {
 	appData.addBasketItem(item);
+	page.counter = appData.getOrderLength();
 });
 
 events.on('card:select', (item: IItem) => {

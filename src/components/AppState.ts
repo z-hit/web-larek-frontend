@@ -29,7 +29,7 @@ export class Item extends Model<IItem> {
 }
 
 export class AppState extends Model<IAppState> {
-	basket: IItem[] = [];
+	//basket: IItem[] = [];
 	catalog: Item[];
 	loading: boolean;
 	order: IOrder = {
@@ -43,8 +43,12 @@ export class AppState extends Model<IAppState> {
 
 	addBasketItem(item: IItem) {
 		this.order.items.push(item.id);
-		this.basket.push(item);
+		//this.basket.push(item);
 		console.log('works');
+	}
+
+	getOrderLength() {
+		return this.order.items.length;
 	}
 
 	removeBasketItem(id: string) {
