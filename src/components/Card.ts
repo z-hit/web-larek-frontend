@@ -4,6 +4,8 @@ import { IItem } from '../types';
 import { bem, createElement, ensureElement } from '../utils/utils';
 
 interface ICardActions {
+	/* add: (event: 'basket:add') => void;
+	remove: (event: 'basket:remove') => void; */
 	onClick: (event: MouseEvent) => void;
 }
 export interface IItemCard {
@@ -66,6 +68,14 @@ export class ItemCard extends Component<IItemCard> {
 
 	get id(): string {
 		return this.container.dataset.id || '';
+	}
+
+	set button(added: boolean) {
+		if (added) {
+			this.setText(this._button, 'Удалить');
+		} else {
+			this.setText(this._button, 'Добавить');
+		}
 	}
 
 	set title(value: string) {

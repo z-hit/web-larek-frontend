@@ -69,7 +69,7 @@ events.on('basket:changed', () => {
 			},
 		});
 		return card.render({
-			index: appData.order.items.length,
+			index: appData.order.items.indexOf(id),
 			title: item.title,
 			price: item.price,
 		});
@@ -81,13 +81,11 @@ events.on('basket:changed', () => {
 events.on('basket:remove', (item: IItem) => {
 	appData.toggleAddedItem(item.id, true);
 	events.emit('basket:changed');
-	console.log(appData.order.items);
 });
 
 events.on('basket:add', (item: IItem) => {
 	appData.toggleAddedItem(item.id, false);
 	events.emit('basket:changed');
-	console.log(appData.order.items);
 });
 
 events.on('card:select', (item: IItem) => {
@@ -96,7 +94,13 @@ events.on('card:select', (item: IItem) => {
 
 events.on('preview:changed', (item: IItem) => {
 	const card = new ItemCard('card', cloneTemplate(cardPreviewTemplate), {
-		onClick: () => events.emit('basket:add', item),
+		onClick: () => {
+			if (!item.isAdded) {
+				events.emit('basket:add', item);
+			} else {
+				events.emit('basket:remove', item);
+			}
+		},
 	});
 
 	modal.render({

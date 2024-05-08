@@ -56,17 +56,6 @@ export class AppState extends Model<IAppState> {
 		}
 	}
 
-	addBasketItem(item: IItem) {
-		if (!item.isAdded) {
-			this.order.items.push(item.id);
-		}
-		console.log('works');
-	}
-
-	getOrderLength() {
-		return this.order.items.length;
-	}
-
 	clearBasket() {
 		this.order.items = [];
 	}
