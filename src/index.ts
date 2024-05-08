@@ -69,8 +69,9 @@ events.on(
 	}
 );
 
-events.on('payment:changed', () => {
-	console.log()
+events.on('payment:changed', (button: HTMLButtonElement) => {
+	appData.order.payment = button.name;
+	console.log(appData.order);
 });
 
 events.on('basket:open', () => {
