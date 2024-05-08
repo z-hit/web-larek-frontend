@@ -1,4 +1,4 @@
-import { Category, ItemID } from '../types';
+import { Category } from '../types';
 import { Component } from './base/Component';
 import { IItem } from '../types';
 import { bem, createElement, ensureElement } from '../utils/utils';
@@ -7,7 +7,7 @@ interface ICardActions {
 	onClick: (event: MouseEvent) => void;
 }
 export interface IItemCard {
-	id: ItemID;
+	id: string;
 	title: string;
 	price: number;
 	description?: string;
@@ -85,7 +85,7 @@ export class ItemCard extends Component<IItemCard> {
 		this.addClass(this._category, colorsCategory[value]);
 	}
 
-	set index(value: string) {
+	set index(value: number) {
 		this.setText(this._index, String(value));
 	}
 

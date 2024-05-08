@@ -1,6 +1,6 @@
 export interface IAppState {
 	catalog: IItem[];
-	basket: ItemID[];
+	basket: string[];
 	order: IOrder | null;
 	loading: boolean;
 	formErrors: FormErrors;
@@ -8,7 +8,8 @@ export interface IAppState {
 }
 
 export interface IItem {
-	id: ItemID;
+	isAdded: boolean;
+	id: string;
 	title: string;
 	price: number;
 	description: string;
@@ -24,7 +25,7 @@ export interface IOrderForm {
 }
 
 export interface IOrder extends IOrderForm {
-	items: ItemID[];
+	items: string[];
 }
 
 export interface IOrderResult {
@@ -33,7 +34,6 @@ export interface IOrderResult {
 }
 
 export type FormErrors = Partial<Record<keyof IOrder, string>>;
-export type ItemID = string;
 export type Payment = 'Онлайн' | 'При получении';
 export type Category =
 	| 'другое'

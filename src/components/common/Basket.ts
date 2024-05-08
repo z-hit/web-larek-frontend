@@ -6,7 +6,7 @@ import {
 	formatNumber,
 } from '../../utils/utils';
 import { EventEmitter } from '../base/events';
-import { IItem, ItemID } from '../AppState';
+import { IItem } from '../AppState';
 
 interface IBasketView {
 	items: HTMLElement[];

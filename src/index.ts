@@ -47,37 +47,16 @@ events.on<CatalogChangeEvent>('items:changed', () => {
 			title: item.title,
 			image: item.image,
 			price: item.price,
+			isAdded: item.isAdded,
 		});
 	});
-});
-
-events.on('basket:open', () => {
-	const basketItems = appData.order.items.map((id) => {
-		const item = appData.catalog.find((item) => item.id === id);
-		const card = new ItemCard('card', cloneTemplate(cardBasketTemplate), {
-			onClick: () => events.emit('card:select', item),
-		});
-		return card.render({
-			index: appData.getOrderLength(),
-			title: item.title,
-			price: item.price,
-		});
-	});
-
-	modal.render({
-		content: basket.render({
-			items: basketItems,
-			selected: appData.order.items,
-		}),
-	});
-});
-
-events.on('basket:add', (item: IItem) => {
-	appData.addBasketItem(item);
-	page.counter = appData.getOrderLength();
 });
 
 events.on('card:select', (item: IItem) => {
+	appData.setPreview(item);
+});
+
+events.on('preview:changed', (item: IItem) => {
 	const card = new ItemCard('card', cloneTemplate(cardPreviewTemplate), {
 		onClick: () => events.emit('basket:add', item),
 	});
@@ -95,66 +74,6 @@ events.on('card:select', (item: IItem) => {
 
 events.on('modal:open', () => {
 	page.locked = true;
-});
-
-// Отправлена форма заказа
-events.on('order:submit', () => {
-	api
-		.orderItems(appData.order)
-		.then(() => {
-			const success = new Success(cloneTemplate(successTemplate), {
-				onClick: () => {
-					modal.close();
-					appData.clearBasket();
-				},
-			});
-
-			modal.render({
-				content: success.render({}),
-			});
-		})
-		.catch((err) => {
-			console.error(err);
-		});
-});
-
-// Изменилось состояние валидации формы
-events.on('formErrors:change', (errors: Partial<IOrderForm>) => {
-	const { email, phone } = errors;
-	order.valid = !email && !phone;
-	order.errors = Object.values({ phone, email })
-		.filter((i) => !!i)
-		.join('; ');
-});
-
-// Изменилось одно из полей
-events.on(
-	/^order\..*:change/,
-	(data: { field: keyof IOrderForm; value: string }) => {
-		appData.setOrderField(data.field, data.value);
-	}
-);
-
-events.on('order:open', () => {
-	modal.render({
-		content: order.render({
-			payment: '',
-			address: '',
-			valid: false,
-			errors: [],
-		}),
-	});
-});
-
-events.on('contacts:open', () => {
-	modal.render({
-		content: contacts.render({
-			email: '',
-			phone: '',
-			valid: false,
-			errors: [],
-		}),
-	});
 });
 
 events.on('modal:close', () => {

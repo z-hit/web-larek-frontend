@@ -111,7 +111,7 @@ yarn build
 Класс `AppState` реализует класс `Model<T>` и сожержит в себе ключевые данные проекта, а именно поля:
 
 - `catalog: IItem[]` - каталог товаров, полученный с сервера;
-- `basket: ItemID[]` - список id товаров, добавленных в корзину;
+- `basket: string[]` - список id товаров, добавленных в корзину;
 - `order: IOrder` - полные данные о заказе типа IOrder;
 - `loading: boolean` - статус процесса загрузки данных;
 - `formErrors: FormErrors = {}` - список ошибок, возникших при работе с сервером;
@@ -120,9 +120,9 @@ yarn build
   Методы класса:
 
 - `setCatalog(items: IItem[]): void` - получает список изначальных карточек от сервера и сохраняет их в каталог в виде реализации интерфейса IItem;
-- `toggleBasketItem(id: ItemID, isAdded: boolean): void` - получает id товара и статус его добавленности в корзину, позволяет добавлять или удалять товар из корзины, в зависимости от статуса;
+- `toggleBasketItem(id: string, isAdded: boolean): void` - получает id товара и статус его добавленности в корзину, позволяет добавлять или удалять товар из корзины, в зависимости от статуса;
 - `clearBasket(): void` - очищает корзину от всех товаров;
-- `getBasketList(): ItemID[]` - возвращает полный список id товаров, добавленных в корзину;
+- `getBasketList(): string[]` - возвращает полный список id товаров, добавленных в корзину;
 - `setOrderField(field: keyof IOrder, value: string): void` - принимает название поля и текст, затем устанавливает текст в соответствующее поле информации о заказе в формате интерфейса IOrder;
 - `validateOrder(): boolean` - возвращает boolean в зависимости от того, прошли ли поля ввода валидацию;
 - `getTotal(): number` - возвращает полную стоимость товаров, добавленных в корзину.
@@ -314,7 +314,7 @@ _параметры состояния приложения, которые мо
 ```
 interface IAppState {
 catalog: Item[];
-basket: ItemID[];
+basket: string[];
 order: IOrder | null;
 loading: boolean;
 formErrors: FormErrors = {};
@@ -326,7 +326,7 @@ _полная информация о товаре_
 
 ```
 interface Item {
-id: ItemID;
+id: string;
 title: string;
 price: number;
 description: string;
@@ -359,7 +359,7 @@ _полная форма заказа, включающая информацию
 ```
 interface IOrder extends IOrderForm, IContactsForm {
 total: number;
-items: ItemID[];
+items: string[];
 }
 ```
 
@@ -372,7 +372,7 @@ type FormErrors = Partial<Record<keyof IOrder, string>>
 _id товара_
 
 ```
-`type ItemID = string
+`type string = string
 ```
 
 _варианты оплаты_
@@ -405,7 +405,7 @@ _индивидулаьная карточка товара_
 
 ```
 interface IItemCard {
-id: ItemID;
+id: string;
 title: string;
 price: number;
 description?: string;

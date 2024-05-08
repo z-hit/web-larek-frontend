@@ -1,4 +1,4 @@
-export { ItemID, Category, IItem } from '../types';
+export { Category, IItem } from '../types';
 
 import { Model } from './base/Model';
 import {
@@ -7,7 +7,6 @@ import {
 	IItem,
 	IOrder,
 	IOrderForm,
-	ItemID,
 	Category,
 	Button,
 } from '../types';
@@ -17,7 +16,7 @@ export type CatalogChangeEvent = {
 };
 
 export class Item extends Model<IItem> {
-	id: ItemID;
+	id: string;
 	title: string;
 	price: number;
 	description: string;
@@ -29,7 +28,7 @@ export class Item extends Model<IItem> {
 }
 
 export class AppState extends Model<IAppState> {
-	//basket: IItem[] = [];
+	basket: string[];
 	catalog: Item[];
 	loading: boolean;
 	order: IOrder = {
@@ -39,11 +38,30 @@ export class AppState extends Model<IAppState> {
 		phone: '',
 		items: [],
 	};
+	preview: string | null;
 	formErrors: FormErrors = {};
 
+	setPreview(item: IItem) {
+		this.preview = item.id;
+		this.emitChanges('preview:changed', item);
+	}
+
+	toggleAddedItem(id: string, isAdded?: boolean) {
+		if (!isAdded) {
+			this.order.items.push(id);
+			this.catalog.find((item) => item.id === id).isAdded = true;
+			console.log('isAdded works');
+		} else {
+			this.order.items.filter((i) => i !== id);
+			this.catalog.find((item) => item.id === id).isAdded = false;
+			console.log('not isAdded works');
+		}
+	}
+
 	addBasketItem(item: IItem) {
-		this.order.items.push(item.id);
-		//this.basket.push(item);
+		if (!item.isAdded) {
+			this.order.items.push(item.id);
+		}
 		console.log('works');
 	}
 
@@ -51,19 +69,13 @@ export class AppState extends Model<IAppState> {
 		return this.order.items.length;
 	}
 
-	removeBasketItem(id: string) {
-		this.order.items.filter((item: ItemID) => item !== id);
-	}
-
 	clearBasket() {
-		this.order.items.forEach((id) => {
-			this.removeBasketItem(id);
-		});
+		this.order.items = [];
 	}
 
 	getTotal() {
 		return this.order.items.reduce(
-			(a, c) => a + this.catalog.find((it) => it.id === c).price,
+			(a, c) => a + this.catalog.find((item) => item.id === c).price,
 			0
 		);
 	}
