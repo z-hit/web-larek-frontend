@@ -62,30 +62,28 @@ events.on('basket:changed', () => {
 	page.counter = appData.order.items.length;
 
 	basket.items = appData.order.items.map((id) => {
+		const itemIndex = appData.order.items.indexOf(id) + 1;
 		const item = appData.catalog.find((item) => item.id === id);
 		const card = new ItemCard('card', cloneTemplate(cardBasketTemplate), {
 			onClick: () => {
-				events.emit('basket:remove', item);
+				events.emit('item:toggle', item);
 			},
 		});
 		return card.render({
-			index: appData.order.items.indexOf(id),
+			index: itemIndex,
 			title: item.title,
 			price: item.price,
+			isAdded: item.isAdded,
 		});
 	});
 	basket.selected = appData.order.items;
 	basket.total = appData.getTotal();
 });
 
-events.on('basket:remove', (item: IItem) => {
-	appData.toggleAddedItem(item.id, true);
+events.on('item:toggle', (item: IItem) => {
+	appData.toggleAddedItem(item.id, item.isAdded);
 	events.emit('basket:changed');
-});
-
-events.on('basket:add', (item: IItem) => {
-	appData.toggleAddedItem(item.id, false);
-	events.emit('basket:changed');
+	console.log(appData.order.items.indexOf(item.id) + 1);
 });
 
 events.on('card:select', (item: IItem) => {
@@ -95,11 +93,7 @@ events.on('card:select', (item: IItem) => {
 events.on('preview:changed', (item: IItem) => {
 	const card = new ItemCard('card', cloneTemplate(cardPreviewTemplate), {
 		onClick: () => {
-			if (!item.isAdded) {
-				events.emit('basket:add', item);
-			} else {
-				events.emit('basket:remove', item);
-			}
+			events.emit('item:toggle', item);
 		},
 	});
 
@@ -110,6 +104,7 @@ events.on('preview:changed', (item: IItem) => {
 			image: item.image,
 			price: item.price,
 			description: item.description,
+			isAdded: item.isAdded,
 		}),
 	});
 });

@@ -4,8 +4,6 @@ import { IItem } from '../types';
 import { bem, createElement, ensureElement } from '../utils/utils';
 
 interface ICardActions {
-	/* add: (event: 'basket:add') => void;
-	remove: (event: 'basket:remove') => void; */
 	onClick: (event: MouseEvent) => void;
 }
 export interface IItemCard {
@@ -17,6 +15,7 @@ export interface IItemCard {
 	category?: Category;
 	index?: number;
 	isAdded: boolean;
+	button: string;
 }
 
 const colorsCategory: Record<string, string> = {
@@ -36,6 +35,7 @@ export class ItemCard extends Component<IItemCard> {
 	protected _button?: HTMLButtonElement;
 	protected _category?: HTMLElement;
 	protected _index?: HTMLElement;
+	isAdded: false;
 
 	constructor(
 		protected blockName: string,
@@ -51,7 +51,7 @@ export class ItemCard extends Component<IItemCard> {
 		this._image = container.querySelector(`.${blockName}__image`);
 		this._button = container.querySelector(`.${blockName}__button`);
 		this._description = container.querySelector(`.${blockName}__description`);
-		this._index = container.querySelector(`.${blockName}_item-index`);
+		this._index = container.querySelector(`.basket__item-index`);
 
 		if (actions?.onClick) {
 			if (this._button) {
@@ -68,14 +68,6 @@ export class ItemCard extends Component<IItemCard> {
 
 	get id(): string {
 		return this.container.dataset.id || '';
-	}
-
-	set button(added: boolean) {
-		if (added) {
-			this.setText(this._button, 'Удалить');
-		} else {
-			this.setText(this._button, 'Добавить');
-		}
 	}
 
 	set title(value: string) {
@@ -99,17 +91,7 @@ export class ItemCard extends Component<IItemCard> {
 		this.setText(this._index, String(value));
 	}
 
-	set description(value: string | string[]) {
-		if (Array.isArray(value)) {
-			this._description.replaceWith(
-				...value.map((str) => {
-					const descTemplate = this._description.cloneNode() as HTMLElement;
-					this.setText(descTemplate, str);
-					return descTemplate;
-				})
-			);
-		} else {
-			this.setText(this._description, value);
-		}
+	set description(value: string) {
+		this.setText(this._description, value);
 	}
 }
