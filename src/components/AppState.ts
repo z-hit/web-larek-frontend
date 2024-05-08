@@ -50,11 +50,9 @@ export class AppState extends Model<IAppState> {
 		if (!isAdded) {
 			this.order.items.push(id);
 			this.catalog.find((item) => item.id === id).isAdded = true;
-			console.log('isAdded works');
 		} else {
-			this.order.items.filter((i) => i !== id);
+			this.order.items = this.order.items.filter((i) => i !== id);
 			this.catalog.find((item) => item.id === id).isAdded = false;
-			console.log('not isAdded works');
 		}
 	}
 

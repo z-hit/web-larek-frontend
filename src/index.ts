@@ -81,11 +81,13 @@ events.on('basket:changed', () => {
 events.on('basket:remove', (item: IItem) => {
 	appData.toggleAddedItem(item.id, true);
 	events.emit('basket:changed');
+	console.log(appData.order.items);
 });
 
 events.on('basket:add', (item: IItem) => {
 	appData.toggleAddedItem(item.id, false);
 	events.emit('basket:changed');
+	console.log(appData.order.items);
 });
 
 events.on('card:select', (item: IItem) => {
