@@ -1,7 +1,7 @@
 import { Form } from './common/Form';
 import { IOrderForm } from '../types';
 import { EventEmitter, IEvents } from './base/events';
-import { ensureElement } from '../utils/utils';
+import { ensureAllElements, ensureElement } from '../utils/utils';
 
 export class Order extends Form<IOrderForm> {
 	_payment: HTMLButtonElement[];
@@ -9,15 +9,14 @@ export class Order extends Form<IOrderForm> {
 
 	constructor(container: HTMLFormElement, events: IEvents) {
 		super(container, events);
-	}
 
-	set payment(value: string) {
-		(this.container.elements.namedItem('phone') as HTMLInputElement).value =
-			value;
+		/* container.querySelectorAll('.button_alt').forEach((button) => {
+			this._payment.push(button);
+		}); */
 	}
 
 	set address(value: string) {
-		(this.container.elements.namedItem('addess') as HTMLInputElement).value =
+		(this.container.elements.namedItem('address') as HTMLInputElement).value =
 			value;
 	}
 }

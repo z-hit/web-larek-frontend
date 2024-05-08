@@ -52,6 +52,27 @@ events.on<CatalogChangeEvent>('items:changed', () => {
 	});
 });
 
+events.on('order:open', () => {
+	modal.render({
+		content: order.render({
+			address: '',
+			valid: false,
+			errors: [],
+		}),
+	});
+});
+
+events.on(
+	/^order\..*:change/,
+	(data: { field: keyof IOrderForm; value: string }) => {
+		appData.setOrderField(data.field, data.value);
+	}
+);
+
+events.on('payment:changed', () => {
+	console.log()
+});
+
 events.on('basket:open', () => {
 	modal.render({
 		content: basket.render(),
@@ -78,24 +99,19 @@ events.on('basket:changed', () => {
 	});
 	basket.selected = appData.order.items;
 	basket.total = appData.getTotal();
-	console.log(appData.catalog);
 });
 
 events.on('item:add', (item: IItem) => {
 	appData.toggleAddedItem(item.id, false);
 	events.emit('basket:changed');
 	page.toggleClass(document.querySelector('.modal'), 'modal_active');
+	events.emit('modal:close');
 });
 
 events.on('item:remove', (item: IItem) => {
 	appData.toggleAddedItem(item.id, true);
 	events.emit('basket:changed');
 });
-
-/* events.on('item:toggle', (item: IItem) => {
-	appData.toggleAddedItem(item.id, item.isAdded);
-	events.emit('basket:changed');
-}); */
 
 events.on('card:select', (item: IItem) => {
 	appData.setPreview(item);
