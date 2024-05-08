@@ -62,8 +62,8 @@ events.on('basket:changed', () => {
 	page.counter = appData.order.items.length;
 
 	basket.items = appData.order.items.map((id) => {
-		const itemIndex = appData.order.items.indexOf(id) + 1;
 		const item = appData.catalog.find((item) => item.id === id);
+		const itemIndex = appData.order.items.indexOf(id) + 1;
 		const card = new ItemCard('card', cloneTemplate(cardBasketTemplate), {
 			onClick: () => {
 				events.emit('item:toggle', item);
@@ -83,7 +83,6 @@ events.on('basket:changed', () => {
 events.on('item:toggle', (item: IItem) => {
 	appData.toggleAddedItem(item.id, item.isAdded);
 	events.emit('basket:changed');
-	console.log(appData.order.items.indexOf(item.id) + 1);
 });
 
 events.on('card:select', (item: IItem) => {

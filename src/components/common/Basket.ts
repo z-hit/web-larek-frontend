@@ -23,7 +23,7 @@ export class Basket extends Component<IBasketView> {
 		super(container);
 
 		this._list = ensureElement<HTMLElement>('.basket__list', this.container);
-		this._total = this.container.querySelector('.basket__total');
+		this._total = this.container.querySelector('.basket__price');
 		this._button = ensureElement<HTMLButtonElement>(
 			'.basket__button',
 			this.container
@@ -59,6 +59,6 @@ export class Basket extends Component<IBasketView> {
 	}
 
 	set total(total: number) {
-		this.setText(this._total, String(total));
+		this.setText(this._total, String(formatNumber(total)) + ' синапсов');
 	}
 }

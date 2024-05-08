@@ -1,7 +1,12 @@
 import { Category } from '../types';
 import { Component } from './base/Component';
 import { IItem } from '../types';
-import { bem, createElement, ensureElement } from '../utils/utils';
+import {
+	bem,
+	createElement,
+	ensureElement,
+	formatNumber,
+} from '../utils/utils';
 
 interface ICardActions {
 	onClick: (event: MouseEvent) => void;
@@ -74,8 +79,10 @@ export class ItemCard extends Component<IItemCard> {
 		this.setText(this._title, value);
 	}
 
-	set price(value: string) {
-		this.setText(this._price, value + ' синапсов');
+	set price(value: number) {
+		if (value) {
+			this.setText(this._price, String(formatNumber(value)) + ' синапсов');
+		}
 	}
 
 	set image(value: string) {
