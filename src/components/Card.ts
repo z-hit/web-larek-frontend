@@ -82,6 +82,8 @@ export class ItemCard extends Component<IItemCard> {
 	set price(value: number) {
 		if (value) {
 			this.setText(this._price, String(formatNumber(value)) + ' синапсов');
+		} else {
+			this.setText(this._price, String(0) + ' синапсов');
 		}
 	}
 

@@ -78,6 +78,7 @@ events.on('basket:changed', () => {
 	});
 	basket.selected = appData.order.items;
 	basket.total = appData.getTotal();
+	console.log(appData.catalog);
 });
 
 events.on('item:toggle', (item: IItem) => {
