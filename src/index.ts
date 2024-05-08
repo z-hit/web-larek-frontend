@@ -52,6 +52,42 @@ events.on<CatalogChangeEvent>('items:changed', () => {
 	});
 });
 
+events.on('basket:open', () => {
+	modal.render({
+		content: basket.render(),
+	});
+});
+
+events.on('basket:changed', () => {
+	page.counter = appData.order.items.length;
+
+	basket.items = appData.order.items.map((id) => {
+		const item = appData.catalog.find((item) => item.id === id);
+		const card = new ItemCard('card', cloneTemplate(cardBasketTemplate), {
+			onClick: () => {
+				events.emit('basket:remove', item);
+			},
+		});
+		return card.render({
+			index: appData.order.items.length,
+			title: item.title,
+			price: item.price,
+		});
+	});
+	basket.selected = appData.order.items;
+	basket.total = appData.getTotal();
+});
+
+events.on('basket:remove', (item: IItem) => {
+	appData.toggleAddedItem(item.id, true);
+	events.emit('basket:changed');
+});
+
+events.on('basket:add', (item: IItem) => {
+	appData.toggleAddedItem(item.id, false);
+	events.emit('basket:changed');
+});
+
 events.on('card:select', (item: IItem) => {
 	appData.setPreview(item);
 });
