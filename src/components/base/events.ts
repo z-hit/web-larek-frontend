@@ -82,4 +82,6 @@ export enum Events {
 	CHANGE_PAYMENT = 'payment:changed',
 	CHANGE_PREVIEW = 'preview:changed',
 	ORDER_READY = 'order:ready',
+
+	
 }

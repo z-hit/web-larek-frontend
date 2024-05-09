@@ -1,20 +1,6 @@
-import { Category, IItem } from '../types';
+import { ICardActions, IItemCard } from '../types';
 import { Component } from './base/Component';
 import { ensureElement, formatNumber } from '../utils/utils';
-
-interface ICardActions {
-	onClick: (event: MouseEvent) => void;
-}
-export interface IItemCard extends Partial<IItem> {
-	id: string;
-	title: string;
-	price: number;
-	description?: string;
-	image?: string;
-	category?: Category;
-	index?: number;
-	button?: string;
-}
 
 const colorsCategory: Record<string, string> = {
 	другое: 'card__category_other',

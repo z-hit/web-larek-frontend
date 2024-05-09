@@ -1,5 +1,3 @@
-import { IEvents } from './events';
-
 export abstract class Component<T> {
 	protected constructor(protected readonly container: HTMLElement) {}
 
@@ -25,7 +23,6 @@ export abstract class Component<T> {
 		}
 	}
 
-	// Скрыть
 	protected setHidden(element: HTMLElement) {
 		element.style.display = 'none';
 	}

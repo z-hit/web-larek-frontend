@@ -2,7 +2,6 @@ export { Category, IItem } from '../types';
 
 import { Model } from './base/Model';
 import {
-	//FormErrors,
 	IAppState,
 	IItem,
 	IOrder,
@@ -12,10 +11,6 @@ import {
 	FormOrderErrors,
 	FormContactsErrors,
 } from '../types';
-
-export type CatalogChangeEvent = {
-	catalog: IItem[];
-};
 
 export class Item extends Model<IItem> {
 	id: string;

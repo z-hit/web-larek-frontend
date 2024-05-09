@@ -8,6 +8,12 @@ export interface IAppState {
 	modal: string | null;
 }
 
+export interface IPage {
+	counter: number;
+	catalog: HTMLElement[];
+	locked: boolean;
+}
+
 export interface IItem {
 	id: string;
 	title: string;
@@ -15,6 +21,17 @@ export interface IItem {
 	description: string;
 	image: string;
 	category: Category;
+}
+
+export interface IItemCard extends Partial<IItem> {
+	id: string;
+	title: string;
+	price: number;
+	description?: string;
+	image?: string;
+	category?: Category;
+	index?: number;
+	button?: string;
 }
 
 export interface IOrderForm {
@@ -48,7 +65,46 @@ export type Category =
 	| 'кнопка'
 	| 'хард-скилл';
 
-/* export type Button = {
-	title: string;
-	callback: Function;
-}; */
+export type ApiListResponse<Type> = {
+	total: number;
+	items: Type[];
+};
+
+export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
+
+export interface ILarekAPI {
+	getItemList: () => Promise<IItem[]>;
+	getItem: (id: string) => Promise<IItem>;
+	orderItems: (order: IOrder) => Promise<IOrderResult>;
+}
+
+export interface IBasketView {
+	items: HTMLElement[];
+	total: number;
+	selected: string[];
+}
+
+export interface IFormState {
+	valid: boolean;
+	errors: string[];
+}
+
+export interface IModalData {
+	content: HTMLElement;
+}
+
+export interface ISuccess {
+	total: number;
+}
+
+export interface ISuccessActions {
+	onClick: () => void;
+}
+
+export type CatalogChangeEvent = {
+	catalog: IItem[];
+};
+
+export interface ICardActions {
+	onClick: (event: MouseEvent) => void;
+}

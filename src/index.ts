@@ -3,13 +3,19 @@ import './scss/styles.scss';
 import { LarekAPI } from './components/LarekApi';
 import { API_URL, CDN_URL } from './utils/constants';
 import { EventEmitter } from './components/base/events';
-import { AppState, CatalogChangeEvent } from './components/AppState';
+import { AppState } from './components/AppState';
 import { Page } from './components/Page';
 import { ItemCard } from './components/Card';
 import { cloneTemplate, ensureElement } from './utils/utils';
 import { Modal } from './components/common/Modal';
 import { Basket } from './components/common/Basket';
-import { IContactsForm, IItem, IOrder, IOrderForm } from './types';
+import {
+	CatalogChangeEvent,
+	IContactsForm,
+	IItem,
+	IOrder,
+	IOrderForm,
+} from './types';
 import { Order } from './components/Order';
 import { Contacts } from './components/Contacts';
 import { Success } from './components/common/Success';
@@ -125,7 +131,6 @@ events.on('contacts:submit', () => {
 					total: sum,
 				}),
 			});
-			console.log(result);
 		})
 		.catch((err) => {
 			console.error(err);
