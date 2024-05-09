@@ -23,7 +23,6 @@ export class Item extends Model<IItem> {
 	image: string;
 	category: Category;
 	index?: number;
-	isAdded?: boolean;
 	button?: Button;
 }
 
@@ -47,13 +46,11 @@ export class AppState extends Model<IAppState> {
 		this.emitChanges('preview:changed', item);
 	}
 
-	toggleAddedItem(id: string, isAdded?: boolean) {
-		if (!isAdded) {
+	toggleAddedItem(id: string, addItem?: boolean) {
+		if (addItem) {
 			this.order.items.push(id);
-			this.catalog.find((item) => item.id === id).isAdded = true;
 		} else {
 			this.order.items = this.order.items.filter((i) => i !== id);
-			this.catalog.find((item) => item.id === id).isAdded = false;
 		}
 	}
 

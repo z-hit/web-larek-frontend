@@ -8,7 +8,6 @@ export interface IAppState {
 }
 
 export interface IItem {
-	isAdded: boolean;
 	id: string;
 	title: string;
 	price: number;

@@ -7,6 +7,7 @@ import {
 	ensureElement,
 	formatNumber,
 } from '../utils/utils';
+import { AppState } from './AppState';
 
 interface ICardActions {
 	onClick: (event: MouseEvent) => void;
@@ -19,7 +20,6 @@ export interface IItemCard {
 	image?: string;
 	category?: Category;
 	index?: number;
-	isAdded: boolean;
 	button: string;
 }
 
@@ -40,7 +40,6 @@ export class ItemCard extends Component<IItemCard> {
 	protected _button?: HTMLButtonElement;
 	protected _category?: HTMLElement;
 	protected _index?: HTMLElement;
-	isAdded: false;
 
 	constructor(
 		protected blockName: string,
@@ -83,7 +82,8 @@ export class ItemCard extends Component<IItemCard> {
 		if (value) {
 			this.setText(this._price, String(formatNumber(value)) + ' синапсов');
 		} else {
-			this.setText(this._price, String(0) + ' синапсов');
+			this.setText(this._price, 'Не продается');
+			this.setDisabled(this._button, true);
 		}
 	}
 

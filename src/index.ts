@@ -48,7 +48,6 @@ events.on<CatalogChangeEvent>('items:changed', () => {
 			title: item.title,
 			image: item.image,
 			price: item.price,
-			isAdded: item.isAdded,
 		});
 	});
 });
@@ -154,7 +153,6 @@ events.on('basket:changed', () => {
 			index: itemIndex,
 			title: item.title,
 			price: item.price,
-			isAdded: item.isAdded,
 		});
 	});
 	basket.selected = appData.order.items;
@@ -162,14 +160,14 @@ events.on('basket:changed', () => {
 });
 
 events.on('item:add', (item: IItem) => {
-	appData.toggleAddedItem(item.id, false);
+	appData.toggleAddedItem(item.id, true);
 	events.emit('basket:changed');
 	modal.close();
 	events.emit('modal:close');
 });
 
 events.on('item:remove', (item: IItem) => {
-	appData.toggleAddedItem(item.id, true);
+	appData.toggleAddedItem(item.id, false);
 	events.emit('basket:changed');
 });
 
@@ -183,6 +181,7 @@ events.on('preview:changed', (item: IItem) => {
 			events.emit('item:add', item);
 		},
 	});
+	console.log(card);
 
 	modal.render({
 		content: card.render({
@@ -191,7 +190,6 @@ events.on('preview:changed', (item: IItem) => {
 			image: item.image,
 			price: item.price,
 			description: item.description,
-			isAdded: item.isAdded,
 		}),
 	});
 });
