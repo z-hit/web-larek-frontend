@@ -113,11 +113,10 @@ events.on('contacts:submit', () => {
 			const success = new Success(cloneTemplate(successTemplate), {
 				onClick: () => {
 					modal.close();
-					appData.clearBasket();
-					events.emit('basket:changed');
 				},
 			});
-
+			appData.clearBasket();
+			events.emit('basket:changed');
 			modal.render({
 				content: success.render({
 					total: sum,
