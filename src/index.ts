@@ -13,6 +13,7 @@ import { IItem, IOrderForm } from './types';
 import { Order } from './components/Order';
 import { Contacts } from './components/Contacts';
 import { Success } from './components/common/Success';
+import { container } from 'webpack';
 
 const events = new EventEmitter();
 const api = new LarekAPI(CDN_URL, API_URL);
@@ -104,6 +105,25 @@ events.on('order:submit', () => {
 	});
 });
 
+events.on('contacts:submit', () => {
+	const success = new Success(cloneTemplate(successTemplate), {
+		onClick: () => {
+			events.emit('success:close');
+		},
+	});
+	modal.render({
+		content: success.render({
+			total: appData.getTotal(),
+		}),
+	});
+	appData.order.items = [];
+	events.emit('basket:changed');
+});
+
+events.on('success:close', () => {
+	modal.close();
+});
+
 events.on('basket:open', () => {
 	modal.render({
 		content: basket.render(),
@@ -135,7 +155,7 @@ events.on('basket:changed', () => {
 events.on('item:add', (item: IItem) => {
 	appData.toggleAddedItem(item.id, false);
 	events.emit('basket:changed');
-	page.toggleClass(document.querySelector('.modal'), 'modal_active');
+	modal.close();
 	events.emit('modal:close');
 });
 
