@@ -1,18 +1,11 @@
-import { Category } from '../types';
+import { Category, IItem } from '../types';
 import { Component } from './base/Component';
-import { IItem } from '../types';
-import {
-	bem,
-	createElement,
-	ensureElement,
-	formatNumber,
-} from '../utils/utils';
-import { AppState } from './AppState';
+import { ensureElement, formatNumber } from '../utils/utils';
 
 interface ICardActions {
 	onClick: (event: MouseEvent) => void;
 }
-export interface IItemCard {
+export interface IItemCard extends Partial<IItem> {
 	id: string;
 	title: string;
 	price: number;

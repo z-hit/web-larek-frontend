@@ -8,7 +8,6 @@ import {
 	IOrder,
 	IOrderForm,
 	Category,
-	Button,
 } from '../types';
 
 export type CatalogChangeEvent = {
@@ -22,8 +21,6 @@ export class Item extends Model<IItem> {
 	description: string;
 	image: string;
 	category: Category;
-	index?: number;
-	button?: string;
 }
 
 export class AppState extends Model<IAppState> {
@@ -41,10 +38,12 @@ export class AppState extends Model<IAppState> {
 	preview: string | null;
 	formErrors: FormErrors = {};
 
+	isItemAdded(item: IItem) {
+		return this.order.items.some((it) => it === item.id);
+	}
+
 	setButtonText(item: IItem) {
-		return this.order.items.some((it) => it === item.id)
-			? 'Удалить'
-			: 'В корзину';
+		return this.isItemAdded(item) ? 'Удалить' : 'В корзину';
 	}
 
 	setPreview(item: IItem) {

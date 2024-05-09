@@ -160,10 +160,7 @@ events.on('basket:changed', () => {
 });
 
 events.on('item:toggle', (item: IItem) => {
-	appData.toggleAddedItem(
-		item.id,
-		appData.order.items.some((it) => it === item.id)
-	);
+	appData.toggleAddedItem(item.id, appData.isItemAdded(item));
 	events.emit('basket:changed');
 });
 
