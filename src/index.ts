@@ -146,7 +146,7 @@ events.on('basket:changed', () => {
 		const itemIndex = appData.order.items.indexOf(id) + 1;
 		const card = new ItemCard('card', cloneTemplate(cardBasketTemplate), {
 			onClick: () => {
-				events.emit('item:remove', item);
+				events.emit('item:toggle', item);
 			},
 		});
 		return card.render({
@@ -159,15 +159,11 @@ events.on('basket:changed', () => {
 	basket.total = appData.getTotal();
 });
 
-events.on('item:add', (item: IItem) => {
-	appData.toggleAddedItem(item.id, true);
-	events.emit('basket:changed');
-	modal.close();
-	events.emit('modal:close');
-});
-
-events.on('item:remove', (item: IItem) => {
-	appData.toggleAddedItem(item.id, false);
+events.on('item:toggle', (item: IItem) => {
+	appData.toggleAddedItem(
+		item.id,
+		appData.order.items.some((it) => it === item.id)
+	);
 	events.emit('basket:changed');
 });
 
@@ -178,7 +174,9 @@ events.on('card:select', (item: IItem) => {
 events.on('preview:changed', (item: IItem) => {
 	const card = new ItemCard('card', cloneTemplate(cardPreviewTemplate), {
 		onClick: () => {
-			events.emit('item:add', item);
+			events.emit('item:toggle', item);
+			modal.close();
+			events.emit('modal:close');
 		},
 	});
 	console.log(card);
@@ -190,6 +188,7 @@ events.on('preview:changed', (item: IItem) => {
 			image: item.image,
 			price: item.price,
 			description: item.description,
+			button: appData.setButtonText(item),
 		}),
 	});
 });

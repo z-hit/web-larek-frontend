@@ -20,7 +20,7 @@ export interface IItemCard {
 	image?: string;
 	category?: Category;
 	index?: number;
-	button: string;
+	button?: string;
 }
 
 const colorsCategory: Record<string, string> = {
@@ -84,6 +84,12 @@ export class ItemCard extends Component<IItemCard> {
 		} else {
 			this.setText(this._price, 'Не продается');
 			this.setDisabled(this._button, true);
+		}
+	}
+
+	set button(value: string) {
+		if (!this._button.classList.contains('basket__item-delete')) {
+			this.setText(this._button, value);
 		}
 	}
 

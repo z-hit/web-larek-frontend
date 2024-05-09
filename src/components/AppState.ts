@@ -23,7 +23,7 @@ export class Item extends Model<IItem> {
 	image: string;
 	category: Category;
 	index?: number;
-	button?: Button;
+	button?: string;
 }
 
 export class AppState extends Model<IAppState> {
@@ -41,13 +41,19 @@ export class AppState extends Model<IAppState> {
 	preview: string | null;
 	formErrors: FormErrors = {};
 
+	setButtonText(item: IItem) {
+		return this.order.items.some((it) => it === item.id)
+			? 'Удалить'
+			: 'В корзину';
+	}
+
 	setPreview(item: IItem) {
 		this.preview = item.id;
 		this.emitChanges('preview:changed', item);
 	}
 
-	toggleAddedItem(id: string, addItem?: boolean) {
-		if (addItem) {
+	toggleAddedItem(id: string, isAdded?: boolean) {
+		if (!isAdded) {
 			this.order.items.push(id);
 		} else {
 			this.order.items = this.order.items.filter((i) => i !== id);
