@@ -31,7 +31,7 @@ export class AppState extends Model<IAppState> {
 	catalog: Item[];
 	loading: boolean;
 	order: IOrder = {
-		payment: 'card',
+		payment: '',
 		address: '',
 		email: '',
 		phone: '',
@@ -91,6 +91,9 @@ export class AppState extends Model<IAppState> {
 
 	validateOrder() {
 		const errors: typeof this.formOrderErrors = {};
+		if (!this.order.payment) {
+			errors.address = 'Необходимо выбрать способ оплаты';
+		}
 		if (!this.order.address) {
 			errors.address = 'Необходимо указать адрес';
 		}
@@ -103,11 +106,11 @@ export class AppState extends Model<IAppState> {
 	validateContacts() {
 		const errors: typeof this.formContactsErrors = {};
 		if (!this.order.email) {
-			errors.email = 'Необходимо указать почту';
+			errors.email = 'Необходимо указать эелектронную почту';
 		}
 
 		if (!this.order.phone) {
-			errors.phone = 'Необходимо указать номер телеофона';
+			errors.phone = 'Необходимо указать номер телефона';
 		}
 
 		this.formContactsErrors = errors;

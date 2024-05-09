@@ -55,6 +55,7 @@ events.on('order:open', () => {
 	appData.order.total = appData.getTotal();
 	modal.render({
 		content: order.render({
+			payment: '',
 			address: '',
 			valid: false,
 			errors: [],
@@ -77,9 +78,9 @@ events.on(
 );
 
 events.on('formOrderErrors:change', (errors: Partial<IOrder>) => {
-	const { address } = errors;
-	order.valid = !address;
-	order.errors = Object.values({ address })
+	const { address, payment } = errors;
+	order.valid = !address && !payment;
+	order.errors = Object.values({ address, payment })
 		.filter((i) => !!i)
 		.join('; ');
 });
@@ -93,7 +94,7 @@ events.on('formContactsErrors:change', (errors: Partial<IOrder>) => {
 });
 
 events.on('payment:changed', (button: HTMLButtonElement) => {
-	appData.order.payment = button.name;
+	appData.setOrderField('payment', button.name);
 });
 
 events.on('order:submit', () => {
@@ -179,7 +180,6 @@ events.on('preview:changed', (item: IItem) => {
 			events.emit('modal:close');
 		},
 	});
-	console.log(card);
 
 	modal.render({
 		content: card.render({

@@ -17,10 +17,18 @@ export class Order extends Form<IOrderForm> {
 
 		this._payment.forEach((button) => {
 			button.addEventListener('click', () => {
-				events.emit('payment:changed', button);
-				this._payment.forEach((button) => {
+				if (
+					!this._payment.some((button) =>
+						button.classList.contains('button_alt-active')
+					)
+				) {
 					this.toggleClass(button, 'button_alt-active');
-				});
+				} else {
+					this._payment.forEach((button) => {
+						this.toggleClass(button, 'button_alt-active');
+					});
+				}
+				events.emit('payment:changed', button);
 			});
 		});
 	}

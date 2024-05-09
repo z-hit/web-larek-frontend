@@ -48,7 +48,7 @@ export type Category =
 	| 'кнопка'
 	| 'хард-скилл';
 
-export type Button = {
+/* export type Button = {
 	title: string;
 	callback: Function;
-};
+}; */
