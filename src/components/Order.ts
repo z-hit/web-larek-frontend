@@ -1,6 +1,6 @@
 import { Form } from './common/Form';
 import { IOrderForm } from '../types';
-import { IEvents } from './base/events';
+import { Events, IEvents } from './base/events';
 import { ensureAllElements } from '../utils/utils';
 
 export class Order extends Form<IOrderForm> {
@@ -28,7 +28,7 @@ export class Order extends Form<IOrderForm> {
 						this.toggleClass(button, 'button_alt-active');
 					});
 				}
-				events.emit('payment:changed', button);
+				events.emit(Events.UPDATE_PAYMENT, button);
 			});
 		});
 	}

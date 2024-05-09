@@ -1,5 +1,6 @@
 import './scss/styles.scss';
 
+import { Events } from './components/base/events';
 import { LarekAPI } from './components/LarekApi';
 import { API_URL, CDN_URL } from './utils/constants';
 import { EventEmitter } from './components/base/events';
@@ -43,10 +44,10 @@ const basket = new Basket(cloneTemplate(basketTemplate), events);
 const order = new Order(cloneTemplate(orderTemplate), events);
 const contacts = new Contacts(cloneTemplate(contactsTemplate), events);
 
-events.on<CatalogChangeEvent>('items:changed', () => {
+events.on<CatalogChangeEvent>(Events.UPDATE_CATALOG, () => {
 	page.catalog = appData.catalog.map((item) => {
 		const card = new ItemCard('card', cloneTemplate(cardCatalogTemplate), {
-			onClick: () => events.emit('card:select', item),
+			onClick: () => events.emit(Events.PREVIEW_CARD, item),
 		});
 		return card.render({
 			category: item.category,
@@ -57,7 +58,7 @@ events.on<CatalogChangeEvent>('items:changed', () => {
 	});
 });
 
-events.on('order:open', () => {
+events.on(Events.OPEN_ORDER, () => {
 	appData.order.total = appData.getTotal();
 	modal.render({
 		content: order.render({
@@ -83,7 +84,7 @@ events.on(
 	}
 );
 
-events.on('formOrderErrors:change', (errors: Partial<IOrder>) => {
+events.on(Events.ORDER_ERRORS, (errors: Partial<IOrder>) => {
 	const { address, payment } = errors;
 	order.valid = !address && !payment;
 	order.errors = Object.values({ address, payment })
@@ -91,7 +92,7 @@ events.on('formOrderErrors:change', (errors: Partial<IOrder>) => {
 		.join('; ');
 });
 
-events.on('formContactsErrors:change', (errors: Partial<IOrder>) => {
+events.on(Events.CONTACTS_ERRORS, (errors: Partial<IOrder>) => {
 	const { email, phone } = errors;
 	contacts.valid = !email && !phone;
 	contacts.errors = Object.values({ email, phone })
@@ -99,11 +100,11 @@ events.on('formContactsErrors:change', (errors: Partial<IOrder>) => {
 		.join('; ');
 });
 
-events.on('payment:changed', (button: HTMLButtonElement) => {
+events.on(Events.UPDATE_PAYMENT, (button: HTMLButtonElement) => {
 	appData.setOrderField('payment', button.name);
 });
 
-events.on('order:submit', () => {
+events.on(Events.MAKE_ORDER, () => {
 	modal.render({
 		content: contacts.render({
 			email: '',
@@ -114,7 +115,7 @@ events.on('order:submit', () => {
 	});
 });
 
-events.on('contacts:submit', () => {
+events.on(Events.PAY_ORDER, () => {
 	api
 		.orderItems(appData.order)
 		.then((result) => {
@@ -125,7 +126,7 @@ events.on('contacts:submit', () => {
 				},
 			});
 			appData.clearBasket();
-			events.emit('basket:changed');
+			events.emit(Events.UPDATE_BASKET);
 			modal.render({
 				content: success.render({
 					total: sum,
@@ -137,17 +138,13 @@ events.on('contacts:submit', () => {
 		});
 });
 
-events.on('success:close', () => {
-	modal.close();
-});
-
-events.on('basket:open', () => {
+events.on(Events.OPEN_BASKET, () => {
 	modal.render({
 		content: basket.render(),
 	});
 });
 
-events.on('basket:changed', () => {
+events.on(Events.UPDATE_BASKET, () => {
 	page.counter = appData.order.items.length;
 
 	basket.items = appData.order.items.map((id) => {
@@ -155,7 +152,7 @@ events.on('basket:changed', () => {
 		const itemIndex = appData.order.items.indexOf(id) + 1;
 		const card = new ItemCard('card', cloneTemplate(cardBasketTemplate), {
 			onClick: () => {
-				events.emit('item:toggle', item);
+				events.emit(Events.TOGGLE_ITEM, item);
 			},
 		});
 		return card.render({
@@ -168,21 +165,21 @@ events.on('basket:changed', () => {
 	basket.total = appData.getTotal();
 });
 
-events.on('item:toggle', (item: IItem) => {
+events.on(Events.TOGGLE_ITEM, (item: IItem) => {
 	appData.toggleAddedItem(item.id, appData.isItemAdded(item));
-	events.emit('basket:changed');
+	events.emit(Events.UPDATE_BASKET);
 });
 
-events.on('card:select', (item: IItem) => {
+events.on(Events.PREVIEW_CARD, (item: IItem) => {
 	appData.setPreview(item);
 });
 
-events.on('preview:changed', (item: IItem) => {
+events.on(Events.UPDATE_PREVIEW, (item: IItem) => {
 	const card = new ItemCard('card', cloneTemplate(cardPreviewTemplate), {
 		onClick: () => {
-			events.emit('item:toggle', item);
+			events.emit(Events.TOGGLE_ITEM, item);
 			modal.close();
-			events.emit('modal:close');
+			events.emit(Events.CLOSE_MODAL);
 		},
 	});
 
@@ -198,11 +195,11 @@ events.on('preview:changed', (item: IItem) => {
 	});
 });
 
-events.on('modal:open', () => {
+events.on(Events.OPEN_MODAL, () => {
 	page.locked = true;
 });
 
-events.on('modal:close', () => {
+events.on(Events.CLOSE_MODAL, () => {
 	page.locked = false;
 });
 

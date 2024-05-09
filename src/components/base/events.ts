@@ -31,7 +31,7 @@ export class EventEmitter implements IEvents {
 
 	off(eventName: EventName, callback: Subscriber) {
 		if (this._events.has(eventName)) {
-			this._events.get(eventName)!.delete(callback);
+			this._events.get(eventName).delete(callback);
 			if (this._events.get(eventName)?.size === 0) {
 				this._events.delete(eventName);
 			}
@@ -68,20 +68,18 @@ export class EventEmitter implements IEvents {
 }
 
 export enum Events {
-	CHANGE_ITEMS = 'items:changed',
-	SUBMIT_ORDER = 'order:submit',
-	SUBMIT_CONTACTS = 'contacts:submit',
-	CHANGE_ERRORS = 'formErrors:change',
-	CHANGE_ORDER = '/^order..*:change/',
+	UPDATE_CATALOG = 'items:changed',
+	TOGGLE_ITEM = 'item:toggle',
 	OPEN_ORDER = 'order:open',
-	OPEN_CONTACTS = 'contacts:open',
+	MAKE_ORDER = 'order:submit',
+	PAY_ORDER = 'contacts:submit',
+	PREVIEW_CARD = 'card:preview',
+	ORDER_ERRORS = 'formOrderErrors:change',
+	CONTACTS_ERRORS = 'formContactsErrors:change',
 	OPEN_BASKET = 'basket:open',
-	OPEN_CARD = 'card:select',
+	UPDATE_BASKET = 'basket:changed',
+	UPDATE_PAYMENT = 'payment:changed',
+	UPDATE_PREVIEW = 'preview:changed',
 	OPEN_MODAL = 'modal:open',
 	CLOSE_MODAL = 'modal:close',
-	CHANGE_PAYMENT = 'payment:changed',
-	CHANGE_PREVIEW = 'preview:changed',
-	ORDER_READY = 'order:ready',
-
-	
 }

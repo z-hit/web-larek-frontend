@@ -1,8 +1,6 @@
 export interface IAppState {
 	catalog: IItem[];
-	basket: string[];
 	order: IOrder | null;
-	loading: boolean;
 	formOrderErrors: FormOrderErrors;
 	formContactsErrors: FormContactsErrors;
 	modal: string | null;
@@ -34,6 +32,15 @@ export interface IItemCard extends Partial<IItem> {
 	button?: string;
 }
 
+export interface ICardActions {
+	onClick: (event: MouseEvent) => void;
+}
+
+export interface IFormState {
+	valid: boolean;
+	errors: string[];
+}
+
 export interface IOrderForm {
 	payment: string;
 	address: string;
@@ -53,6 +60,10 @@ export interface IOrderResult {
 	id: string;
 	total: number;
 }
+
+export type CatalogChangeEvent = {
+	catalog: IItem[];
+};
 
 export type FormOrderErrors = Partial<Record<keyof IOrderForm, string>>;
 export type FormContactsErrors = Partial<Record<keyof IContactsForm, string>>;
@@ -84,11 +95,6 @@ export interface IBasketView {
 	selected: string[];
 }
 
-export interface IFormState {
-	valid: boolean;
-	errors: string[];
-}
-
 export interface IModalData {
 	content: HTMLElement;
 }
@@ -99,12 +105,4 @@ export interface ISuccess {
 
 export interface ISuccessActions {
 	onClick: () => void;
-}
-
-export type CatalogChangeEvent = {
-	catalog: IItem[];
-};
-
-export interface ICardActions {
-	onClick: (event: MouseEvent) => void;
 }

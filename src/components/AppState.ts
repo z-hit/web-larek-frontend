@@ -11,6 +11,7 @@ import {
 	FormOrderErrors,
 	FormContactsErrors,
 } from '../types';
+import { Events } from './base/events';
 
 export class Item extends Model<IItem> {
 	id: string;
@@ -22,9 +23,7 @@ export class Item extends Model<IItem> {
 }
 
 export class AppState extends Model<IAppState> {
-	basket: string[];
 	catalog: Item[];
-	loading: boolean;
 	order: IOrder = {
 		payment: '',
 		address: '',
@@ -47,7 +46,7 @@ export class AppState extends Model<IAppState> {
 
 	setPreview(item: IItem) {
 		this.preview = item.id;
-		this.emitChanges('preview:changed', item);
+		this.emitChanges(Events.UPDATE_PREVIEW, item);
 	}
 
 	toggleAddedItem(id: string, isAdded?: boolean) {
@@ -71,7 +70,7 @@ export class AppState extends Model<IAppState> {
 
 	setCatalog(items: IItem[]) {
 		this.catalog = items.map((item) => new Item(item, this.events));
-		this.emitChanges('items:changed', { catalog: this.catalog });
+		this.emitChanges(Events.UPDATE_CATALOG, { catalog: this.catalog });
 	}
 
 	setOrderField(field: keyof IOrderForm, value: string) {
@@ -94,7 +93,7 @@ export class AppState extends Model<IAppState> {
 		}
 
 		this.formOrderErrors = errors;
-		this.events.emit('formOrderErrors:change', this.formOrderErrors);
+		this.events.emit(Events.ORDER_ERRORS, this.formOrderErrors);
 		return Object.keys(errors).length === 0;
 	}
 
@@ -109,7 +108,7 @@ export class AppState extends Model<IAppState> {
 		}
 
 		this.formContactsErrors = errors;
-		this.events.emit('formContactsErrors:change', this.formContactsErrors);
+		this.events.emit(Events.CONTACTS_ERRORS, this.formContactsErrors);
 		return Object.keys(errors).length === 0;
 	}
 }
