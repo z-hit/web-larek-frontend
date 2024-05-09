@@ -24,13 +24,9 @@ export interface IOrderForm {
 	phone: string;
 }
 
-/* export interface IContactsForm {
-	email: string;
-	phone: string;
-} */
-
 export interface IOrder extends IOrderForm {
 	items: string[];
+	total: number;
 }
 
 export interface IOrderResult {

@@ -37,6 +37,7 @@ export class AppState extends Model<IAppState> {
 		email: '',
 		phone: '',
 		items: [],
+		total: 0,
 	};
 	preview: string | null;
 	formErrors: FormErrors = {};
@@ -85,6 +86,7 @@ export class AppState extends Model<IAppState> {
 		if (!this.order.address) {
 			errors.address = 'Необходимо указать адрес';
 		}
+
 		this.formErrors = errors;
 		this.events.emit('formErrors:change', this.formErrors);
 		return Object.keys(errors).length === 0;

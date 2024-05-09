@@ -54,6 +54,7 @@ events.on<CatalogChangeEvent>('items:changed', () => {
 });
 
 events.on('order:open', () => {
+	appData.order.total = appData.getTotal();
 	modal.render({
 		content: order.render({
 			address: '',
@@ -91,7 +92,6 @@ events.on('formErrors:change', (errors: Partial<IOrderForm>) => {
 
 events.on('payment:changed', (button: HTMLButtonElement) => {
 	appData.order.payment = button.name;
-	console.log(appData.order);
 });
 
 events.on('order:submit', () => {
@@ -106,18 +106,28 @@ events.on('order:submit', () => {
 });
 
 events.on('contacts:submit', () => {
-	const success = new Success(cloneTemplate(successTemplate), {
-		onClick: () => {
-			events.emit('success:close');
-		},
-	});
-	modal.render({
-		content: success.render({
-			total: appData.getTotal(),
-		}),
-	});
-	appData.order.items = [];
-	events.emit('basket:changed');
+	api
+		.orderItems(appData.order)
+		.then((result) => {
+			const sum = appData.getTotal();
+			const success = new Success(cloneTemplate(successTemplate), {
+				onClick: () => {
+					modal.close();
+					appData.clearBasket();
+					events.emit('basket:changed');
+				},
+			});
+
+			modal.render({
+				content: success.render({
+					total: sum,
+				}),
+			});
+			console.log(result);
+		})
+		.catch((err) => {
+			console.error(err);
+		});
 });
 
 events.on('success:close', () => {
