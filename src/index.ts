@@ -69,9 +69,39 @@ events.on(
 	}
 );
 
+events.on(
+	/^contacts\..*:change/,
+	(data: { field: keyof IOrderForm; value: string }) => {
+		appData.setOrderField(data.field, data.value);
+	}
+);
+
+events.on('formErrors:change', (errors: Partial<IOrderForm>) => {
+	const { address, email, phone } = errors;
+	order.valid = !address;
+	order.errors = Object.values({ address })
+		.filter((i) => !!i)
+		.join('; ');
+	contacts.valid = !email && !phone;
+	contacts.errors = Object.values({ email, phone })
+		.filter((i) => !!i)
+		.join('; ');
+});
+
 events.on('payment:changed', (button: HTMLButtonElement) => {
 	appData.order.payment = button.name;
 	console.log(appData.order);
+});
+
+events.on('order:submit', () => {
+	modal.render({
+		content: contacts.render({
+			email: '',
+			phone: '',
+			valid: false,
+			errors: [],
+		}),
+	});
 });
 
 events.on('basket:open', () => {

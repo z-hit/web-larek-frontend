@@ -3,7 +3,7 @@ import { IOrderForm } from '../types';
 import { EventEmitter, IEvents } from './base/events';
 import { ensureElement } from '../utils/utils';
 
-export class Contacts extends Form<IOrderForm> {
+export class Contacts extends Form<Partial<IOrderForm>> {
 	_email: HTMLInputElement;
 	_phone: HTMLInputElement;
 

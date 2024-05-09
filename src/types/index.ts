@@ -20,18 +20,16 @@ export interface IItem {
 export interface IOrderForm {
 	payment: string;
 	address: string;
-}
-
-export interface IContactsForm {
 	email: string;
 	phone: string;
 }
 
-export interface IOrder {
-	payment: string;
-	address: string;
+/* export interface IContactsForm {
 	email: string;
 	phone: string;
+} */
+
+export interface IOrder extends IOrderForm {
 	items: string[];
 }
 

@@ -3,7 +3,7 @@ import { IOrderForm } from '../types';
 import { EventEmitter, IEvents } from './base/events';
 import { ensureAllElements, ensureElement } from '../utils/utils';
 
-export class Order extends Form<IOrderForm> {
+export class Order extends Form<Partial<IOrderForm>> {
 	_payment: HTMLButtonElement[];
 	_address: HTMLInputElement;
 
@@ -18,17 +18,9 @@ export class Order extends Form<IOrderForm> {
 		this._payment.forEach((button) => {
 			button.addEventListener('click', () => {
 				events.emit('payment:changed', button);
-				if (
-					!this._payment.find((btn) =>
-						btn.classList.contains('button_alt-active')
-					)
-				) {
+				this._payment.forEach((button) => {
 					this.toggleClass(button, 'button_alt-active');
-				} else {
-					this._payment.forEach((button) => {
-						this.toggleClass(button, 'button_alt-active');
-					});
-				}
+				});
 			});
 		});
 	}

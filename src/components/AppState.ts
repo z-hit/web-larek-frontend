@@ -32,7 +32,7 @@ export class AppState extends Model<IAppState> {
 	catalog: Item[];
 	loading: boolean;
 	order: IOrder = {
-		payment: '',
+		payment: 'card',
 		address: '',
 		email: '',
 		phone: '',
