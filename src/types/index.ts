@@ -3,7 +3,8 @@ export interface IAppState {
 	basket: string[];
 	order: IOrder | null;
 	loading: boolean;
-	formErrors: FormErrors;
+	formOrderErrors: FormOrderErrors;
+	formContactsErrors: FormContactsErrors;
 	modal: string | null;
 }
 
@@ -19,11 +20,14 @@ export interface IItem {
 export interface IOrderForm {
 	payment: string;
 	address: string;
+}
+
+export interface IContactsForm {
 	email: string;
 	phone: string;
 }
 
-export interface IOrder extends IOrderForm {
+export interface IOrder extends IOrderForm, IContactsForm {
 	items: string[];
 	total: number;
 }
@@ -33,7 +37,9 @@ export interface IOrderResult {
 	total: number;
 }
 
-export type FormErrors = Partial<Record<keyof IOrder, string>>;
+export type FormOrderErrors = Partial<Record<keyof IOrderForm, string>>;
+export type FormContactsErrors = Partial<Record<keyof IContactsForm, string>>;
+
 export type Payment = 'Онлайн' | 'При получении';
 export type Category =
 	| 'другое'

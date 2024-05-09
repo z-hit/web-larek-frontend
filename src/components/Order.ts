@@ -1,9 +1,9 @@
 import { Form } from './common/Form';
 import { IOrderForm } from '../types';
-import { EventEmitter, IEvents } from './base/events';
-import { ensureAllElements, ensureElement } from '../utils/utils';
+import { IEvents } from './base/events';
+import { ensureAllElements } from '../utils/utils';
 
-export class Order extends Form<Partial<IOrderForm>> {
+export class Order extends Form<IOrderForm> {
 	_payment: HTMLButtonElement[];
 	_address: HTMLInputElement;
 

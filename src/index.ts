@@ -5,15 +5,14 @@ import { API_URL, CDN_URL } from './utils/constants';
 import { EventEmitter } from './components/base/events';
 import { AppState, CatalogChangeEvent } from './components/AppState';
 import { Page } from './components/Page';
-import { IItemCard, ItemCard } from './components/Card';
-import { cloneTemplate, createElement, ensureElement } from './utils/utils';
+import { ItemCard } from './components/Card';
+import { cloneTemplate, ensureElement } from './utils/utils';
 import { Modal } from './components/common/Modal';
 import { Basket } from './components/common/Basket';
-import { IItem, IOrderForm } from './types';
+import { IContactsForm, IItem, IOrder, IOrderForm } from './types';
 import { Order } from './components/Order';
 import { Contacts } from './components/Contacts';
 import { Success } from './components/common/Success';
-import { container } from 'webpack';
 
 const events = new EventEmitter();
 const api = new LarekAPI(CDN_URL, API_URL);
@@ -72,17 +71,21 @@ events.on(
 
 events.on(
 	/^contacts\..*:change/,
-	(data: { field: keyof IOrderForm; value: string }) => {
-		appData.setOrderField(data.field, data.value);
+	(data: { field: keyof IContactsForm; value: string }) => {
+		appData.setContactsField(data.field, data.value);
 	}
 );
 
-events.on('formErrors:change', (errors: Partial<IOrderForm>) => {
-	const { address, email, phone } = errors;
+events.on('formOrderErrors:change', (errors: Partial<IOrder>) => {
+	const { address } = errors;
 	order.valid = !address;
 	order.errors = Object.values({ address })
 		.filter((i) => !!i)
 		.join('; ');
+});
+
+events.on('formContactsErrors:change', (errors: Partial<IOrder>) => {
+	const { email, phone } = errors;
 	contacts.valid = !email && !phone;
 	contacts.errors = Object.values({ email, phone })
 		.filter((i) => !!i)

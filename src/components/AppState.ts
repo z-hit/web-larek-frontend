@@ -2,12 +2,15 @@ export { Category, IItem } from '../types';
 
 import { Model } from './base/Model';
 import {
-	FormErrors,
+	//FormErrors,
 	IAppState,
 	IItem,
 	IOrder,
 	IOrderForm,
 	Category,
+	IContactsForm,
+	FormOrderErrors,
+	FormContactsErrors,
 } from '../types';
 
 export type CatalogChangeEvent = {
@@ -36,7 +39,8 @@ export class AppState extends Model<IAppState> {
 		total: 0,
 	};
 	preview: string | null;
-	formErrors: FormErrors = {};
+	formOrderErrors: FormOrderErrors = {};
+	formContactsErrors: FormContactsErrors = {};
 
 	isItemAdded(item: IItem) {
 		return this.order.items.some((it) => it === item.id);
@@ -83,14 +87,37 @@ export class AppState extends Model<IAppState> {
 		}
 	}
 
+	setContactsField(field: keyof IContactsForm, value: string) {
+		this.order[field] = value;
+
+		if (this.validateContacts()) {
+			this.events.emit('contacts:ready', this.order);
+		}
+	}
+
 	validateOrder() {
-		const errors: typeof this.formErrors = {};
+		const errors: typeof this.formOrderErrors = {};
 		if (!this.order.address) {
 			errors.address = 'Необходимо указать адрес';
 		}
 
-		this.formErrors = errors;
-		this.events.emit('formErrors:change', this.formErrors);
+		this.formOrderErrors = errors;
+		this.events.emit('formOrderErrors:change', this.formOrderErrors);
+		return Object.keys(errors).length === 0;
+	}
+
+	validateContacts() {
+		const errors: typeof this.formContactsErrors = {};
+		if (!this.order.email) {
+			errors.email = 'Необходимо указать почту';
+		}
+
+		if (!this.order.phone) {
+			errors.phone = 'Необходимо указать номер телеофона';
+		}
+
+		this.formContactsErrors = errors;
+		this.events.emit('formContactsErrors:change', this.formContactsErrors);
 		return Object.keys(errors).length === 0;
 	}
 }
