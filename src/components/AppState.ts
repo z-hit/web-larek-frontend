@@ -109,18 +109,14 @@ export class AppState extends Model<IAppState> {
 
 		if (!this.order.email) {
 			errors.email = 'Необходимо указать эелектронную почту';
-		}
-
-		if (!validEmail) {
+		} else if (!validEmail) {
 			errors.email = 'Необходимо корректно написать эелектронную почту';
 		}
 
 		if (!this.order.phone) {
 			errors.phone = 'Необходимо указать номер телефона';
-		}
-
-		if (!validPhone) {
-			errors.email = 'Необходимо корректно написать номер телефона';
+		} else if (!validPhone) {
+			errors.phone = 'Необходимо корректно написать номер телефона';
 		}
 
 		this.formContactsErrors = errors;

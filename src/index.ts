@@ -17,8 +17,8 @@ import {
 	IOrder,
 	IOrderForm,
 } from './types';
-import { Order } from './components/Order';
-import { Contacts } from './components/Contacts';
+import { Order } from './components/OrderForm';
+import { Contacts } from './components/ContactsForm';
 import { Success } from './components/Success';
 
 const events = new EventEmitter();
@@ -134,9 +134,7 @@ events.on(Events.PAY_ORDER, () => {
 				}),
 			});
 		})
-		.catch((err) => {
-			console.error(err);
-		});
+		.catch(console.error);
 });
 
 events.on(Events.OPEN_BASKET, () => {
