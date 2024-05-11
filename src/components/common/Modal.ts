@@ -1,6 +1,6 @@
 import { Component } from '../base/Component';
 import { ensureElement } from '../../utils/utils';
-import { Events, IEvents } from '../base/events';
+import { Events, IEvents } from '../base/Events';
 import { IModalData } from '../../types';
 
 export class Modal extends Component<IModalData> {
@@ -35,6 +35,10 @@ export class Modal extends Component<IModalData> {
 		this.content = null;
 		this.events.emit(Events.CLOSE_MODAL);
 	}
+
+	/* toggleOpen() {
+		this.toggleClass(this.container, 'modal_active');
+	} */
 
 	render(data: IModalData): HTMLElement {
 		super.render(data);

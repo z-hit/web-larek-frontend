@@ -1,6 +1,6 @@
 import { Form } from './common/Form';
 import { IOrderForm } from '../types';
-import { Events, IEvents } from './base/events';
+import { Events, IEvents } from './base/Events';
 import { ensureAllElements } from '../utils/utils';
 
 export class Order extends Form<IOrderForm> {
@@ -14,6 +14,9 @@ export class Order extends Form<IOrderForm> {
 			'.button_alt',
 			container
 		);
+		this._address = this.container.elements.namedItem(
+			'address'
+		) as HTMLInputElement;
 
 		this._payment.forEach((button) => {
 			button.addEventListener('click', () => {
@@ -34,7 +37,6 @@ export class Order extends Form<IOrderForm> {
 	}
 
 	set address(value: string) {
-		(this.container.elements.namedItem('address') as HTMLInputElement).value =
-			value;
+		this._address.value = value;
 	}
 }

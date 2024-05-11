@@ -11,7 +11,7 @@ import {
 	FormOrderErrors,
 	FormContactsErrors,
 } from '../types';
-import { Events } from './base/events';
+import { Events } from './base/Events';
 
 export class Item extends Model<IItem> {
 	id: string;

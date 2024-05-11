@@ -1,10 +1,8 @@
-import { ApiPostMethods } from "../../types";
-
+import { ApiPostMethods } from '../../types';
 
 export class Api {
 	readonly baseUrl: string;
 	protected options: RequestInit;
-	
 
 	constructor(baseUrl: string, options: RequestInit = {}) {
 		this.baseUrl = baseUrl;

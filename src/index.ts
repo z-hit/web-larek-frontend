@@ -1,15 +1,15 @@
 import './scss/styles.scss';
 
-import { Events } from './components/base/events';
+import { Events } from './components/base/Events';
 import { LarekAPI } from './components/LarekApi';
 import { API_URL, CDN_URL } from './utils/constants';
-import { EventEmitter } from './components/base/events';
+import { EventEmitter } from './components/base/Events';
 import { AppState } from './components/AppState';
 import { Page } from './components/Page';
 import { ItemCard } from './components/Card';
 import { cloneTemplate, ensureElement } from './utils/utils';
 import { Modal } from './components/common/Modal';
-import { Basket } from './components/common/Basket';
+import { Basket } from './components/Basket';
 import {
 	CatalogChangeEvent,
 	IContactsForm,
@@ -19,7 +19,7 @@ import {
 } from './types';
 import { Order } from './components/Order';
 import { Contacts } from './components/Contacts';
-import { Success } from './components/common/Success';
+import { Success } from './components/Success';
 
 const events = new EventEmitter();
 const api = new LarekAPI(CDN_URL, API_URL);
@@ -43,6 +43,11 @@ const modal = new Modal(ensureElement<HTMLElement>('#modal-container'), events);
 const basket = new Basket(cloneTemplate(basketTemplate), events);
 const order = new Order(cloneTemplate(orderTemplate), events);
 const contacts = new Contacts(cloneTemplate(contactsTemplate), events);
+const success = new Success(cloneTemplate(successTemplate), {
+	onClick: () => {
+		modal.close();
+	},
+});
 
 events.on<CatalogChangeEvent>(Events.UPDATE_CATALOG, () => {
 	page.catalog = appData.catalog.map((item) => {
@@ -120,11 +125,7 @@ events.on(Events.PAY_ORDER, () => {
 		.orderItems(appData.order)
 		.then((result) => {
 			const sum = appData.getTotal();
-			const success = new Success(cloneTemplate(successTemplate), {
-				onClick: () => {
-					modal.close();
-				},
-			});
+
 			appData.clearBasket();
 			events.emit(Events.UPDATE_BASKET);
 			modal.render({
@@ -179,7 +180,6 @@ events.on(Events.UPDATE_PREVIEW, (item: IItem) => {
 		onClick: () => {
 			events.emit(Events.TOGGLE_ITEM, item);
 			modal.close();
-			events.emit(Events.CLOSE_MODAL);
 		},
 	});
 
@@ -203,9 +203,4 @@ events.on(Events.CLOSE_MODAL, () => {
 	page.locked = false;
 });
 
-api
-	.getItemList()
-	.then(appData.setCatalog.bind(appData))
-	.catch((err) => {
-		console.error(err);
-	});
+api.getItemList().then(appData.setCatalog.bind(appData)).catch(console.error);
