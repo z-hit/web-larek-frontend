@@ -99,12 +99,28 @@ export class AppState extends Model<IAppState> {
 
 	validateContacts() {
 		const errors: typeof this.formContactsErrors = {};
+		const validEmail: boolean = /[^@\s]+@[^@\s]+\.[^@\s]+/.test(
+			this.order.email
+		);
+		const validPhone =
+			/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/.test(
+				this.order.phone
+			);
+
 		if (!this.order.email) {
 			errors.email = 'Необходимо указать эелектронную почту';
 		}
 
+		if (!validEmail) {
+			errors.email = 'Необходимо корректно написать эелектронную почту';
+		}
+
 		if (!this.order.phone) {
 			errors.phone = 'Необходимо указать номер телефона';
+		}
+
+		if (!validPhone) {
+			errors.email = 'Необходимо корректно написать номер телефона';
 		}
 
 		this.formContactsErrors = errors;
