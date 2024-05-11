@@ -123,7 +123,7 @@ events.on(Events.MAKE_ORDER, () => {
 events.on(Events.PAY_ORDER, () => {
 	api
 		.orderItems(appData.order)
-		.then((result) => {
+		.then(() => {
 			const sum = appData.getTotal();
 
 			appData.clearBasket();
