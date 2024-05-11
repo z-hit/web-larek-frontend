@@ -102,7 +102,7 @@ export class AppState extends Model<IAppState> {
 		const validEmail: boolean = /[^@\s]+@[^@\s]+\.[^@\s]+/.test(
 			this.order.email
 		);
-		const validPhone =
+		const validPhone: boolean =
 			/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/.test(
 				this.order.phone
 			);
